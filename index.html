@@ -96,7 +96,7 @@
     display: flex; align-items: center; gap: 10px;
     justify-content: space-between; margin-bottom: 12px;
   }
-  .stepper .et { font-size: 13px; color: var(--dim); }
+  .stepper .et { font-size: 15px; font-weight: 600; color: var(--text); }
   .stepper .grup { display: flex; align-items: center; gap: 4px; }
 
   .pas {
@@ -107,7 +107,7 @@
   .pas:active { background: var(--sec-hi); }
   .pas:disabled { opacity: .35; }
 
-  #cate {
+  #cate, #maxim {
     width: 62px; height: 46px; border-radius: 12px;
     background: var(--sec); border: 1px solid var(--line);
     color: var(--text); font-size: 20px; font-weight: 650;
@@ -115,7 +115,9 @@
     -moz-appearance: textfield;
   }
   #cate::-webkit-outer-spin-button,
-  #cate::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  #cate::-webkit-inner-spin-button,
+  #maxim::-webkit-outer-spin-button,
+  #maxim::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
   #genereaza {
     width: 100%; padding: 20px; border: none; border-radius: 16px;
@@ -128,13 +130,14 @@
   #genereaza:active { transform: scale(.975); background: var(--accent-hi); }
 
   .secundare {
-    display: grid; grid-template-columns: repeat(3, 1fr);
+    display: grid; grid-template-columns: 1fr 1.3fr 1fr;
     gap: 8px; margin-top: 10px;
   }
   .sec-btn {
-    padding: 13px 8px; border: none; border-radius: 12px;
-    background: var(--sec); color: var(--dim);
-    font-size: 13px; font-family: inherit; cursor: pointer;
+    padding: 14px 8px; border: none; border-radius: 12px;
+    background: var(--sec); color: var(--text);
+    font-size: 15px; font-weight: 600; letter-spacing: .01em;
+    line-height: 1.25; font-family: inherit; cursor: pointer;
   }
   .sec-btn:active { background: var(--sec-hi); }
 
@@ -168,6 +171,8 @@
   #bazin .n.nou {
     background: var(--gold); border-color: var(--gold-line); color: var(--gold-text);
   }
+  #bazin.dens { gap: 4px; }
+  #bazin.dens .n { font-size: 11px; }
 
   /* --------------------------------------------------------------- istoric */
   #istoric { margin-top: 10px; max-height: 210px; overflow-y: auto; }
@@ -190,6 +195,32 @@
     color: #f0c675; border-radius: 12px; padding: 10px 12px;
     font-size: 12px; margin-bottom: 12px; line-height: 1.45;
   }
+
+  /* ---------------------------------------------------------------- dialog */
+  #supra {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(8, 9, 12, .66);
+    display: none; place-items: center; padding: 22px;
+  }
+  #supra.on { display: grid; }
+  #dlg {
+    width: 100%; max-width: 380px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 16px; padding: 18px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, .5);
+  }
+  #dlgTxt { font-size: 15px; line-height: 1.5; margin-bottom: 16px; }
+  .dlg-actiuni { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dlg-actiuni button {
+    padding: 14px 8px; border: none; border-radius: 12px;
+    background: var(--sec); color: var(--text);
+    font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer;
+  }
+  .dlg-actiuni button:active { background: var(--sec-hi); }
+  #dlgDa { background: var(--accent); color: #fff; }
+  #dlgDa:active { background: var(--accent-hi); }
+  #supra.simplu .dlg-actiuni { grid-template-columns: 1fr; }
+  #supra.simplu #dlgNu { display: none; }
 </style>
 </head>
 <body>
@@ -197,7 +228,7 @@
 
   <header>
     <h1>Generator numere</h1>
-    <div class="sub">1&ndash;49 &middot; f&#259;r&#259; repeti&#539;ie</div>
+    <div class="sub" id="sub">1&ndash;49 &middot; f&#259;r&#259; repeti&#539;ie</div>
   </header>
 
   <div id="avert"></div>
@@ -205,6 +236,15 @@
   <div class="card">
     <div class="eticheta">Extragerea curent&#259;</div>
     <div id="rezultat"></div>
+  </div>
+
+  <div class="stepper">
+    <span class="et">Din c&acirc;te numere</span>
+    <div class="grup">
+      <button class="pas" id="minusMax" aria-label="bazin mai mic">&minus;</button>
+      <input id="maxim" type="number" inputmode="numeric" value="49" min="1" max="100">
+      <button class="pas" id="plusMax" aria-label="bazin mai mare">+</button>
+    </div>
   </div>
 
   <div class="stepper">
@@ -220,7 +260,7 @@
 
   <div class="secundare">
     <button class="sec-btn" id="copiaza">Copiaz&#259;</button>
-    <button class="sec-btn" id="anuleaza">Anuleaz&#259;</button>
+    <button class="sec-btn" id="anuleaza">Un pas &#238;napoi</button>
     <button class="sec-btn" id="reset">Reset</button>
   </div>
 
@@ -240,29 +280,52 @@
 
 </div>
 
+<div id="supra" role="dialog" aria-modal="true">
+  <div id="dlg">
+    <div id="dlgTxt"></div>
+    <div class="dlg-actiuni">
+      <button id="dlgNu" type="button">Renun&#539;</button>
+      <button id="dlgDa" type="button">Confirm&#259;</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
   "use strict";
 
-  var MIN_N = 1, MAX_N = 49, TOTAL = MAX_N - MIN_N + 1;
+  var MIN_N = 1;              // primul numar din bazin
+  var MAX_ABS = 100;          // cel mai mare bazin permis
+  var MAX_IMPL = 49;          // bazinul implicit
+
   var CHEIE = "generator_numere_v1";
 
-  var stare = { folosite: [], istoric: [], ultima: [] };
+  var stare = { max: MAX_IMPL, folosite: [], istoric: [], ultima: [] };
   var stocareOk = true;
+
+  function total() { return stare.max - MIN_N + 1; }
 
   // ------------------------------------------------------------ persistenta
   function incarca() {
+    var brut;
     try {
-      var brut = localStorage.getItem(CHEIE);
-      if (!brut) return;
+      brut = localStorage.getItem(CHEIE);
+    } catch (e) {
+      stocareOk = false;                  // storage blocat de browser
+      return;
+    }
+    if (!brut) return;
+    try {
       var d = JSON.parse(brut);
+      stare.max = (Number.isInteger(d.max) && d.max >= 1 && d.max <= MAX_ABS)
+        ? d.max : MAX_IMPL;               // salvarile vechi nu au "max"
       stare.folosite = (d.folosite || []).filter(function (n) {
-        return Number.isInteger(n) && n >= MIN_N && n <= MAX_N;
+        return Number.isInteger(n) && n >= MIN_N && n <= stare.max;
       });
       stare.istoric = Array.isArray(d.istoric) ? d.istoric : [];
       stare.ultima = Array.isArray(d.ultima) ? d.ultima : [];
     } catch (e) {
-      stocareOk = false;
+      stare = { max: MAX_IMPL, folosite: [], istoric: [], ultima: [] };
     }
   }
 
@@ -286,6 +349,39 @@
     el.style.display = "block";
   }
 
+  // ------------------------------------------------------- dialog in pagina
+  // Nu folosim window.confirm / window.alert: browserul le poate bloca (bifa
+  // "nu mai afisa dialoguri", moduri standalone, extensii). Cand sunt blocate,
+  // confirm() returneaza false in tacere si butoanele par moarte.
+  var raspunde = null;
+
+  function inchideDlg(da) {
+    document.getElementById("supra").classList.remove("on");
+    var cb = raspunde;
+    raspunde = null;
+    if (cb) cb(da);
+  }
+
+  function intreaba(text, cb) {
+    var supra = document.getElementById("supra");
+    document.getElementById("dlgTxt").textContent = text;
+    document.getElementById("dlgDa").textContent = "Confirm\u0103";
+    supra.classList.remove("simplu");
+    supra.classList.add("on");
+    raspunde = cb;
+    document.getElementById("dlgDa").focus();
+  }
+
+  function spune(text) {
+    var supra = document.getElementById("supra");
+    document.getElementById("dlgTxt").textContent = text;
+    document.getElementById("dlgDa").textContent = "OK";
+    supra.classList.add("simplu");
+    supra.classList.add("on");
+    raspunde = null;
+    document.getElementById("dlgDa").focus();
+  }
+
   // --------------------------------------------------- aleator criptografic
   function intAleator(limita) {            // 0 .. limita-1, fara bias
     var max = Math.floor(4294967296 / limita) * limita;
@@ -297,6 +393,7 @@
 
   function extrage(bazin, cate) {          // Fisher-Yates partial
     var copie = bazin.slice(), rez = [];
+    cate = Math.min(cate, copie.length);
     for (var i = 0; i < cate; i++) {
       var j = i + intAleator(copie.length - i);
       var t = copie[i]; copie[i] = copie[j]; copie[j] = t;
@@ -307,7 +404,7 @@
 
   function ramase() {
     var set = new Set(stare.folosite), out = [];
-    for (var n = MIN_N; n <= MAX_N; n++) if (!set.has(n)) out.push(n);
+    for (var n = MIN_N; n <= stare.max; n++) if (!set.has(n)) out.push(n);
     return out;
   }
 
@@ -316,22 +413,28 @@
     var disp = ramase();
 
     if (disp.length === 0) {
-      if (confirm("Toate numerele au fost extrase.\nResetez bazinul?")) reset(true);
+      intreaba("Toate numerele au fost extrase. Resetez bazinul?",
+        function (da) { if (da) reset(true); });
       return;
     }
 
     var cate = parseInt(document.getElementById("cate").value, 10);
     if (!Number.isInteger(cate) || cate < 1) {
-      alert("Introdu un numar intreg, cel putin 1.");
+      spune("Introdu un num\u0103r \u00eentreg, cel pu\u021bin 1.");
       return;
     }
 
     if (cate > disp.length) {
-      if (!confirm("Ai cerut " + cate + ", dar au mai ramas doar " + disp.length +
-                   ".\nExtrag toate cele " + disp.length + " numere ramase?")) return;
-      cate = disp.length;
+      intreaba("Ai cerut " + cate + ", dar au mai r\u0103mas doar " + disp.length +
+               ". Extrag toate cele " + disp.length + " numere r\u0103mase?",
+        function (da) { if (da) executa(disp, disp.length); });
+      return;
     }
 
+    executa(disp, cate);
+  }
+
+  function executa(disp, cate) {
     var noi = extrage(disp, cate);
     stare.folosite = stare.folosite.concat(noi);
     stare.ultima = noi;
@@ -342,8 +445,39 @@
     deseneaza();
   }
 
+  function schimbaMax(nou) {
+    if (!Number.isInteger(nou)) { deseneaza(); return; }
+    nou = Math.min(MAX_ABS, Math.max(1, nou));
+    if (nou === stare.max) { deseneaza(); return; }
+
+    // Bazinul si istoricul apartin unei anumite marimi. Daca s-a extras deja
+    // ceva, schimbarea marimii porneste de la zero.
+    if (stare.folosite.length || stare.istoric.length) {
+      intreaba("Schimb bazinul la 1\u2013" + nou +
+               ". Extragerile de p\u00e2n\u0103 acum se \u0219terg. Continui?",
+        function (da) {
+          if (!da) { deseneaza(); return; }
+          stare.folosite = []; stare.istoric = []; stare.ultima = [];
+          aplicaMax(nou);
+        });
+      return;
+    }
+
+    aplicaMax(nou);
+  }
+
+  function aplicaMax(nou) {
+    stare.max = nou;
+    var camp = document.getElementById("cate");
+    var v = parseInt(camp.value, 10);
+    if (!Number.isInteger(v) || v > nou) camp.value = Math.min(v || 1, nou);
+
+    salveaza();
+    deseneaza();
+  }
+
   function anuleaza() {
-    if (stare.istoric.length === 0) { alert("Nu exista nicio extragere."); return; }
+    if (stare.istoric.length === 0) { spune("Nu exist\u0103 nicio extragere."); return; }
     var ultimaIntrare = stare.istoric.pop();
     var sters = new Set(ultimaIntrare.numere);
     stare.folosite = stare.folosite.filter(function (n) { return !sters.has(n); });
@@ -354,16 +488,28 @@
   }
 
   function reset(fara_confirmare) {
-    if (!fara_confirmare &&
-        !confirm("Sterg tot istoricul si repun toate numerele in bazin?")) return;
-    stare.folosite = []; stare.istoric = []; stare.ultima = [];
+    if (!fara_confirmare) {
+      intreaba("\u0218terg tot istoricul \u0219i repun toate numerele \u00een bazin?",
+        function (da) { if (da) reset(true); });
+      return;
+    }
+    stare.folosite = []; stare.istoric = []; stare.ultima = [];  // "max" ramane
     salveaza();
     deseneaza();
   }
 
   function copiaza() {
-    if (!stare.ultima.length) return;
-    var txt = stare.ultima.join(" ");
+    if (!stare.istoric.length) { spune("Nu exist\u0103 nicio extragere de copiat."); return; }
+
+    // Aceeasi ordine ca in lista Istoric: cea mai recenta extragere prima.
+    var txt = stare.istoric.slice().reverse().filter(function (intrare) {
+      return intrare && Array.isArray(intrare.numere) && intrare.numere.length;
+    }).map(function (intrare) {
+      return intrare.numere.join("  ");
+    }).join("\n");
+
+    if (!txt) { spune("Nu exist\u0103 nicio extragere de copiat."); return; }
+
     if (navigator.clipboard) {
       navigator.clipboard.writeText(txt).catch(function () { copiazaVechi(txt); });
     } else {
@@ -413,27 +559,35 @@
       });
     }
 
-    // bazin
+    // bazin (se reconstruieste doar cand se schimba marimea)
     var bazin = document.getElementById("bazin");
-    if (!bazin.children.length) {
-      for (var k = MIN_N; k <= MAX_N; k++) {
+    if (bazin.children.length !== total()) {
+      bazin.innerHTML = "";
+      for (var k = MIN_N; k <= stare.max; k++) {
         var c = document.createElement("div");
         c.className = "n"; c.textContent = k;
         bazin.appendChild(c);
       }
+      var coloane = total() > 49 ? 10 : 7;
+      bazin.style.gridTemplateColumns = "repeat(" + coloane + ", 1fr)";
+      bazin.classList.toggle("dens", coloane === 10);
     }
-    for (var i = 0; i < TOTAL; i++) {
+    for (var i = 0; i < total(); i++) {
       var num = MIN_N + i, el = bazin.children[i];
       el.className = "n" + (noi.has(num) ? " nou" : folosite.has(num) ? " folosit" : "");
     }
 
-    // contor si progres
+    // subtitlu, contor si progres
+    document.getElementById("sub").textContent =
+      "1\u2013" + stare.max + " \u00b7 f\u0103r\u0103 repeti\u021bie";
     document.getElementById("contor").textContent =
       disp.length + " disponibile \u00b7 " + stare.istoric.length + " extrageri";
     document.getElementById("bara").style.width =
-      ((TOTAL - disp.length) / TOTAL * 100) + "%";
+      ((total() - disp.length) / total() * 100) + "%";
 
-    // limite stepper
+    // limite steppere
+    document.getElementById("maxim").value = stare.max;
+
     var camp = document.getElementById("cate");
     camp.max = Math.max(1, disp.length);
     if (parseInt(camp.value, 10) > disp.length && disp.length > 0) {
@@ -471,9 +625,25 @@
   document.getElementById("genereaza").addEventListener("click", genereaza);
   document.getElementById("minus").addEventListener("click", function () { ajusteaza(-1); });
   document.getElementById("plus").addEventListener("click", function () { ajusteaza(1); });
+  document.getElementById("minusMax").addEventListener("click", function () { schimbaMax(stare.max - 1); });
+  document.getElementById("plusMax").addEventListener("click", function () { schimbaMax(stare.max + 1); });
+  document.getElementById("maxim").addEventListener("change", function () {
+    schimbaMax(parseInt(this.value, 10));
+  });
   document.getElementById("copiaza").addEventListener("click", copiaza);
   document.getElementById("anuleaza").addEventListener("click", anuleaza);
   document.getElementById("reset").addEventListener("click", function () { reset(false); });
+
+  document.getElementById("dlgDa").addEventListener("click", function () { inchideDlg(true); });
+  document.getElementById("dlgNu").addEventListener("click", function () { inchideDlg(false); });
+  document.getElementById("supra").addEventListener("click", function (e) {
+    if (e.target === this) inchideDlg(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!document.getElementById("supra").classList.contains("on")) return;
+    if (e.key === "Escape") { e.preventDefault(); inchideDlg(false); }
+    else if (e.key === "Enter") { e.preventDefault(); inchideDlg(true); }
+  });
 
   incarca();
   if (!stocareOk) avertizeaza();
