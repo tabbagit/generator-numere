@@ -492,6 +492,7 @@
 
   function reset() {
     stare.folosite = []; stare.istoric = []; stare.ultima = [];  // "max" si "cate" raman
+    stare.evidentiaza = true;
     salveaza();
     deseneaza();
   }
@@ -545,14 +546,16 @@
         noi = new Set(stare.evidentiaza ? stare.ultima : []);
 
     // "Extragerea curenta" se reconstruieste doar cand se schimba. Altfel
-    // bilele ar reporni animatia la fiecare redesenare (ex. dupa OK la final).
+    // bilele ar reporni animatia la fiecare redesenare. Dupa OK-ul de final
+    // zona ramane complet goala, desi "stare.ultima" se pastreaza pentru copiere.
     var rez = document.getElementById("rezultat");
-    if (rez.getAttribute("data-afisat") !== stare.ultima.join(",")) {
-      rez.setAttribute("data-afisat", stare.ultima.join(","));
+    var cheie = stare.evidentiaza ? stare.ultima.join(",") : "-";
+    if (rez.getAttribute("data-afisat") !== cheie) {
+      rez.setAttribute("data-afisat", cheie);
       rez.innerHTML = "";
-      if (!stare.ultima.length) {
+      if (stare.evidentiaza && !stare.ultima.length) {
         rez.innerHTML = '<span class="gol">apas\u0103 GENEREAZ\u0102</span>';
-      } else {
+      } else if (stare.evidentiaza) {
         var n = stare.ultima.length;
         var dim = n <= 6 ? 58 : n <= 12 ? 46 : n <= 24 ? 36 : 28;
         stare.ultima.forEach(function (num, i) {
