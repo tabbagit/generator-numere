@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generator de Numere Aleatorii</title>
+<style>
+:root{
+  --bg:#071522; --panel:#0a1a2a; --panel2:#061422; --border:#183b59;
+  --orange:#ff8a16; --orange2:#ffad4d; --blue:#1976d2; --blue2:#285c88;
+  --gray:#68788b; --green:#21c878; --text:#e8eef5; --muted:#7190aa;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+body{overflow:hidden}
+.app{height:100vh;min-width:1100px;display:flex;flex-direction:column}
+header{height:122px;flex:0 0 122px;background:#071522;border-bottom:1px solid #0b2235;display:flex;align-items:center;padding:22px 30px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:16px}
+.star{width:56px;height:56px;border:3px solid var(--orange);border-radius:50%;display:grid;place-items:center;color:var(--orange);font-size:31px}
+h1{font-size:31px;font-weight:500;letter-spacing:.3px;margin:0}
+.subtitle{margin-top:5px;color:#7190aa;font-size:12px;font-weight:bold}
+.credit{font-size:14px;font-weight:bold;font-style:italic;color:#dbe4ec}
+
+.main{flex:1;min-height:0;display:grid;grid-template-columns:360px minmax(0,1fr);gap:14px;padding:14px 22px 12px}
+.panel{border:1px solid var(--border);border-radius:20px;background:var(--panel);min-width:0;min-height:0}
+.available{display:flex;flex-direction:column;padding:16px 12px 10px}
+.panel-title{display:flex;justify-content:space-between;align-items:center;padding:0 8px 12px;font-size:18px;font-weight:bold}
+.range{color:#cbd5df;font-size:15px}
+.available-body{flex:1;min-height:0;background:#061523;border-radius:12px;padding:14px 11px;overflow:auto}
+.grid{display:grid;grid-template-columns:repeat(6,48px);gap:8px 4px;justify-content:start}
+.ball{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:bold;flex:0 0 48px;user-select:none}
+.ball.available{background:var(--orange);border:2px solid var(--orange2);color:#111}
+.ball.used{background:#667587;border:2px solid #8090a3;color:#edf2f6}
+.legend{height:38px;margin-top:9px;border:1px solid var(--border);border-radius:14px;display:flex;align-items:center;gap:28px;padding:0 20px;color:#91a5b8;font-size:11px}
+.dot{width:24px;height:24px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:5px}
+.dot.orange{background:var(--orange)} .dot.gray{background:#667587}
+
+.right{min-width:0;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:10px}
+.settings{padding:16px 18px}
+.settings h2,.results h2{font-size:16px;margin:0 0 12px}
+.fields{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.field{display:flex;align-items:center;gap:8px;color:#7692aa;font-weight:bold;font-size:13px}
+input{width:118px;height:42px;border-radius:10px;border:2px solid #28506f;background:#071522;color:#f1f5f8;font-size:17px;padding:0 12px;outline:none}
+input:focus{border-color:#3d7198}
+.actions{padding:10px 12px;display:flex;gap:12px}
+button{border:0;border-radius:13px;height:54px;font-size:16px;font-weight:bold;cursor:pointer}
+#draw{background:var(--orange);color:#111;flex:1}
+#reset{background:#183653;color:#e5edf4;width:112px}
+button:disabled{opacity:.55;cursor:not-allowed}
+
+.results{padding:14px 12px 10px;display:flex;flex-direction:column;min-height:0}
+.results-head{display:flex;justify-content:space-between;align-items:center;padding:0 7px 10px}
+.total{color:#7892aa;font-size:14px}
+.result-scroll{flex:1;min-height:0;background:#061523;border-radius:12px;overflow:auto;padding:10px}
+.result-grid{display:flex;flex-direction:column;gap:7px;width:max-content;min-width:100%}
+.result-row{display:flex;gap:4px;width:max-content}
+.result-ball{width:48px;height:48px;border-radius:50%;background:#21c878;border:2px solid #5be39b;color:#050b08;display:grid;place-items:center;font-size:16px;font-weight:bold;flex:0 0 48px}
+.copy-area{display:grid;gap:9px;margin-top:10px}
+.copy{height:43px;border-radius:11px;color:#eef4f8}
+#copyLast{background:#285c88} #copyAll{background:#1976d2}
+.stats{height:78px;display:grid;grid-template-columns:repeat(3,1fr);align-items:center;text-align:center;padding:4px}
+.stat-label{font-size:10px;color:#7892aa;font-weight:bold}.stat-value{font-size:25px;font-weight:bold;margin-top:5px}
+.blue{color:#19a0ff}.orangeText{color:var(--orange)}.greenText{color:var(--green)}
+
+footer{height:30px;flex:0 0 30px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;color:#617b92;font-size:11px;font-style:italic}
+@media (max-width:1200px){
+  .main{grid-template-columns:350px minmax(0,1fr)}
+  header{padding-left:20px;padding-right:20px}
+  .credit{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="star">★</div>
+    <div>
+      <h1>GENERATOR DE NUMERE ALEATORII</h1>
+      <div class="subtitle">GENERATOR FĂRĂ REPETIȚIE</div>
+    </div>
+  </div>
+  <div class="credit">generator făcut pentru și la cererea lui Diac Matei</div>
+</header>
+
+<div class="main">
+  <section class="panel available">
+    <div class="panel-title"><span>NUMERE DISPONIBILE</span><span class="range" id="rangeLabel">(1 – 49)</span></div>
+    <div class="available-body"><div class="grid" id="numberGrid"></div></div>
+    <div class="legend">
+      <span><span class="dot orange"></span>= disponibil</span>
+      <span><span class="dot gray"></span>= deja extras</span>
+    </div>
+  </section>
+
+  <section class="right">
+    <div class="panel settings">
+      <h2>SETĂRI EXTRAGERE</h2>
+      <div class="fields">
+        <label class="field">De la: <input id="from" type="number" value="1" min="1"></label>
+        <label class="field">Până la: <input id="to" type="number" value="49" min="1"></label>
+        <label class="field">CÂTE NUMERE? <input id="count" type="number" value="6" min="1"></label>
+      </div>
+    </div>
+
+    <div class="panel actions">
+      <button id="draw">▶ &nbsp; EXTRAGE NUMERE</button>
+      <button id="reset">↻ &nbsp; RESET</button>
+    </div>
+
+    <div class="panel results">
+      <div class="results-head"><h2>NUMERE EXTRASE</h2><span class="total">Total: <span id="total">0</span></span></div>
+      <div class="result-scroll" id="resultScroll"><div class="result-grid" id="resultGrid"></div></div>
+      <div class="copy-area">
+        <button class="copy" id="copyLast">▣ &nbsp; COPIAZĂ ULTIMELE NUMERE EXTRASE</button>
+        <button class="copy" id="copyAll">▣ &nbsp; COPIAZĂ TOATE NUMERELE</button>
+      </div>
+    </div>
+
+    <div class="panel stats">
+      <div><div class="stat-label">TOTAL NUMERE</div><div class="stat-value blue" id="statTotal">49</div></div>
+      <div><div class="stat-label">EXTRASE</div><div class="stat-value orangeText" id="statDrawn">0</div></div>
+      <div><div class="stat-label">RĂMASE</div><div class="stat-value greenText" id="statRemain">49</div></div>
+    </div>
+  </section>
+</div>
+
+<footer><span>♥ &nbsp; Generator de Numere Aleatorii</span><span>Norocul e doar un număr distanță!</span></footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let numbers = [], used = new Set(), allDrawn = [], lastDraw = [], drawing = false;
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function rangeValues(){
+  let a=parseInt($('from').value), b=parseInt($('to').value);
+  if(!Number.isFinite(a)) a=1; if(!Number.isFinite(b)) b=49;
+  if(a>b) [a,b]=[b,a];
+  return [a,b];
+}
+function rebuildAvailable(){
+  const [a,b]=rangeValues(); numbers=[];
+  for(let i=a;i<=b;i++) numbers.push(i);
+  used=new Set([...used].filter(n=>n>=a&&n<=b));
+  $('rangeLabel').textContent=`(${a} – ${b})`;
+  $('numberGrid').innerHTML='';
+  numbers.forEach(n=>{
+    const d=document.createElement('div');
+    d.className='ball '+(used.has(n)?'used':'available');
+    d.textContent=n;
+    $('numberGrid').appendChild(d);
+  });
+  updateStats();
+}
+function updateStats(){
+  const total=numbers.length, drawn=used.size;
+  $('statTotal').textContent=total; $('statDrawn').textContent=drawn; $('statRemain').textContent=Math.max(0,total-drawn);
+  $('total').textContent=allDrawn.length;
+}
+function addRow(vals){
+  const row=document.createElement('div'); row.className='result-row';
+  vals.forEach(n=>{
+    const d=document.createElement('div'); d.className='result-ball'; d.textContent=n; row.appendChild(d);
+  });
+  $('resultGrid').appendChild(row);
+  $('resultScroll').scrollTop=$('resultScroll').scrollHeight;
+}
+function available(){ return numbers.filter(n=>!used.has(n)); }
+
+function draw(){
+  if(drawing) return;
+  const req=Math.max(1,parseInt($('count').value)||1);
+  const avail=available();
+  if(!avail.length){ showDone(); return; }
+
+  const take=Math.min(req,avail.length); // ultimele numere se extrag automat
+  const selected=shuffle(avail.slice()).slice(0,take);
+  drawing=true; $('draw').disabled=true; $('reset').disabled=true;
+  $('copyLast').disabled=true; $('copyAll').disabled=true; $('draw').textContent='EXTRAGERE...';
+  lastDraw=selected.slice();
+
+  let i=0;
+  const step=()=>{
+    if(i>=selected.length){
+      addRow(selected); 
+      updateStats(); 
+      rebuildAvailable();
+      drawing=false; $('draw').disabled=false; $('reset').disabled=false; $('copyLast').disabled=false; $('copyAll').disabled=false;
+      $('draw').textContent='▶  EXTRAGE NUMERE';
+      if(available().length===0) setTimeout(showDone,350);
+      return;
+    }
+    const n=selected[i++]; used.add(n); allDrawn.push(n); updateStats(); rebuildAvailable();
+    setTimeout(step,70); // rapid
+  };
+  step();
+}
+function showDone(){
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.62);display:grid;place-items:center;z-index:20;opacity:0;transition:opacity .25s';
+  const box=document.createElement('div');
+  box.style.cssText='width:min(520px,90vw);padding:34px;border-radius:22px;background:#0b1e2f;border:2px solid #21c878;box-shadow:0 20px 70px rgba(0,0,0,.55);text-align:center;transform:scale(.82);transition:transform .3s';
+  box.innerHTML='<div style="font-size:50px;color:#21c878;margin-bottom:10px">✓</div><div style="font-size:24px;font-weight:bold">TOATE NUMERELE AU FOST EXTRASE!</div><div style="margin-top:10px;color:#8da3b7">Nu mai există numere disponibile.</div><button id="doneClose" style="margin-top:24px;width:150px;background:#21c878;color:#071522">ÎNCHIDE</button>';
+  overlay.appendChild(box); document.body.appendChild(overlay);
+  requestAnimationFrame(()=>{overlay.style.opacity=1;box.style.transform='scale(1)'});
+  $('doneClose').onclick=()=>{box.style.transform='scale(.82)';overlay.style.opacity=0;setTimeout(()=>overlay.remove(),250)};
+}
+function resetAll(){
+  used.clear();allDrawn=[];lastDraw=[];$('resultGrid').innerHTML='';$('total').textContent='0';
+  rebuildAvailable();
+}
+async function copyText(text,btn,normal){
+  try{await navigator.clipboard.writeText(text);}
+  catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+  btn.textContent='✓ COPIAT';
+  setTimeout(()=>btn.textContent=normal,1200);
+}
+$('draw').onclick=draw;
+$('reset').onclick=resetAll;
+$('copyLast').onclick=()=>copyText(lastDraw.join(', '),$('copyLast'),'▣  COPIAZĂ ULTIMELE NUMERE EXTRASE');
+$('copyAll').onclick=()=>copyText(allDrawn.join(', '),$('copyAll'),'▣  COPIAZĂ TOATE NUMERELE');
+$('from').onchange=resetAll; $('to').onchange=resetAll;
+rebuildAvailable();
+</script>
+</body>
+</html>
