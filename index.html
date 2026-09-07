@@ -303,7 +303,7 @@
 
   var CHEIE = "generator_numere_v1";
 
-  var stare = { max: MAX_IMPL, cate: 6, folosite: [], istoric: [], ultima: [] };
+  var stare = { max: MAX_IMPL, cate: 6, evidentiaza: true, folosite: [], istoric: [], ultima: [] };
   var stocareOk = true;
 
   function total() { return stare.max - MIN_N + 1; }
@@ -329,8 +329,9 @@
       });
       stare.istoric = Array.isArray(d.istoric) ? d.istoric : [];
       stare.ultima = Array.isArray(d.ultima) ? d.ultima : [];
+      stare.evidentiaza = d.evidentiaza !== false;
     } catch (e) {
-      stare = { max: MAX_IMPL, cate: 6, folosite: [], istoric: [], ultima: [] };
+      stare = { max: MAX_IMPL, cate: 6, evidentiaza: true, folosite: [], istoric: [], ultima: [] };
     }
   }
 
@@ -377,13 +378,13 @@
     document.getElementById("dlgDa").focus();
   }
 
-  function spune(text) {
+  function spune(text, cb) {
     var supra = document.getElementById("supra");
     document.getElementById("dlgTxt").textContent = text;
     document.getElementById("dlgDa").textContent = "OK";
     supra.classList.add("simplu");
     supra.classList.add("on");
-    raspunde = null;
+    raspunde = cb || null;               // ruleaza si la OK, si la Escape/fundal
     document.getElementById("dlgDa").focus();
   }
 
@@ -418,7 +419,11 @@
     var disp = ramase();
 
     if (disp.length === 0) {
-      spune("Toate numerele au fost extrase");
+      spune("Toate numerele au fost extrase", function () {
+        stare.evidentiaza = false;       // ultimele extrase devin ca celelalte
+        salveaza();
+        deseneaza();
+      });
       return;
     }
 
@@ -437,6 +442,7 @@
     var noi = extrage(disp, cate);
     stare.folosite = stare.folosite.concat(noi);
     stare.ultima = noi;
+    stare.evidentiaza = true;
     stare.istoric.push({ ora: acum(), numere: noi });
 
     if (navigator.vibrate) navigator.vibrate(18);
@@ -479,6 +485,7 @@
     stare.folosite = stare.folosite.filter(function (n) { return !sters.has(n); });
     stare.ultima = stare.istoric.length
       ? stare.istoric[stare.istoric.length - 1].numere : [];
+    stare.evidentiaza = true;
     salveaza();
     deseneaza();
   }
@@ -535,26 +542,30 @@
   // ----------------------------------------------------------------- afisare
   function deseneaza() {
     var disp = ramase(), folosite = new Set(stare.folosite),
-        noi = new Set(stare.ultima);
+        noi = new Set(stare.evidentiaza ? stare.ultima : []);
 
-    // extragerea curenta
+    // "Extragerea curenta" se reconstruieste doar cand se schimba. Altfel
+    // bilele ar reporni animatia la fiecare redesenare (ex. dupa OK la final).
     var rez = document.getElementById("rezultat");
-    rez.innerHTML = "";
-    if (!stare.ultima.length) {
-      rez.innerHTML = '<span class="gol">apas\u0103 GENEREAZ\u0102</span>';
-    } else {
-      var n = stare.ultima.length;
-      var dim = n <= 6 ? 58 : n <= 12 ? 46 : n <= 24 ? 36 : 28;
-      stare.ultima.forEach(function (num, i) {
-        var b = document.createElement("div");
-        b.className = "bila";
-        b.textContent = num;
-        b.style.width = dim + "px";
-        b.style.height = dim + "px";
-        b.style.fontSize = Math.round(dim * 0.42) + "px";
-        b.style.animationDelay = (i * 55) + "ms";
-        rez.appendChild(b);
-      });
+    if (rez.getAttribute("data-afisat") !== stare.ultima.join(",")) {
+      rez.setAttribute("data-afisat", stare.ultima.join(","));
+      rez.innerHTML = "";
+      if (!stare.ultima.length) {
+        rez.innerHTML = '<span class="gol">apas\u0103 GENEREAZ\u0102</span>';
+      } else {
+        var n = stare.ultima.length;
+        var dim = n <= 6 ? 58 : n <= 12 ? 46 : n <= 24 ? 36 : 28;
+        stare.ultima.forEach(function (num, i) {
+          var b = document.createElement("div");
+          b.className = "bila";
+          b.textContent = num;
+          b.style.width = dim + "px";
+          b.style.height = dim + "px";
+          b.style.fontSize = Math.round(dim * 0.42) + "px";
+          b.style.animationDelay = (i * 55) + "ms";
+          rez.appendChild(b);
+        });
+      }
     }
 
     // bazin (se reconstruieste doar cand se schimba marimea)
