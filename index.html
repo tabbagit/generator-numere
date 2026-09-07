@@ -130,7 +130,7 @@
   #genereaza:active { transform: scale(.975); background: var(--accent-hi); }
 
   .secundare {
-    display: grid; grid-template-columns: 1fr 1.3fr 1fr;
+    display: grid; grid-template-columns: 1fr 1fr;
     gap: 8px; margin-top: 10px;
   }
   .sec-btn {
@@ -259,7 +259,8 @@
   <button id="genereaza">GENEREAZ&#258;</button>
 
   <div class="secundare">
-    <button class="sec-btn" id="copiaza">Copiaz&#259;</button>
+    <button class="sec-btn" id="copiaza">Copiaz&#259; ultima extragere</button>
+    <button class="sec-btn" id="copiazaTot">Copiaz&#259; tot istoricul</button>
     <button class="sec-btn" id="anuleaza">Un pas &#238;napoi</button>
     <button class="sec-btn" id="reset">RESET</button>
   </div>
@@ -486,16 +487,20 @@
     deseneaza();
   }
 
-  function copiaza() {
-    if (!stare.istoric.length) { spune("Nu exist\u0103 nicio extragere de copiat."); return; }
+  function copiazaUltima() {
+    copiazaText("copiaza", stare.ultima.join("  "));
+  }
 
+  function copiazaTot() {
     // Aceeasi ordine ca in lista Istoric: cea mai recenta extragere prima.
-    var txt = stare.istoric.slice().reverse().filter(function (intrare) {
+    copiazaText("copiazaTot", stare.istoric.slice().reverse().filter(function (intrare) {
       return intrare && Array.isArray(intrare.numere) && intrare.numere.length;
     }).map(function (intrare) {
       return intrare.numere.join("  ");
-    }).join("\n");
+    }).join("\n"));
+  }
 
+  function copiazaText(idButon, txt) {
     if (!txt) { spune("Nu exist\u0103 nicio extragere de copiat."); return; }
 
     if (navigator.clipboard) {
@@ -503,9 +508,12 @@
     } else {
       copiazaVechi(txt);
     }
-    var b = document.getElementById("copiaza");
+
+    var b = document.getElementById(idButon);
+    if (b.getAttribute("data-text") === null) b.setAttribute("data-text", b.textContent);
     b.textContent = "Copiat";
-    setTimeout(function () { b.textContent = "Copiaz\u0103"; }, 1200);
+    clearTimeout(b.tempo);
+    b.tempo = setTimeout(function () { b.textContent = b.getAttribute("data-text"); }, 1200);
   }
 
   function copiazaVechi(txt) {
@@ -626,7 +634,8 @@
   document.getElementById("maxim").addEventListener("change", function () {
     schimbaMax(parseInt(this.value, 10));
   });
-  document.getElementById("copiaza").addEventListener("click", copiaza);
+  document.getElementById("copiaza").addEventListener("click", copiazaUltima);
+  document.getElementById("copiazaTot").addEventListener("click", copiazaTot);
   document.getElementById("anuleaza").addEventListener("click", anuleaza);
   document.getElementById("reset").addEventListener("click", reset);
 
