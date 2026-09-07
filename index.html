@@ -261,7 +261,7 @@
   <div class="secundare">
     <button class="sec-btn" id="copiaza">Copiaz&#259;</button>
     <button class="sec-btn" id="anuleaza">Un pas &#238;napoi</button>
-    <button class="sec-btn" id="reset">Reset</button>
+    <button class="sec-btn" id="reset">RESET</button>
   </div>
 
   <div class="card" style="margin-top:12px">
@@ -300,7 +300,7 @@
 
   var CHEIE = "generator_numere_v1";
 
-  var stare = { max: MAX_IMPL, folosite: [], istoric: [], ultima: [] };
+  var stare = { max: MAX_IMPL, cate: 6, folosite: [], istoric: [], ultima: [] };
   var stocareOk = true;
 
   function total() { return stare.max - MIN_N + 1; }
@@ -319,13 +319,15 @@
       var d = JSON.parse(brut);
       stare.max = (Number.isInteger(d.max) && d.max >= 1 && d.max <= MAX_ABS)
         ? d.max : MAX_IMPL;               // salvarile vechi nu au "max"
+      stare.cate = (Number.isInteger(d.cate) && d.cate >= 1 && d.cate <= stare.max)
+        ? d.cate : Math.min(6, stare.max);
       stare.folosite = (d.folosite || []).filter(function (n) {
         return Number.isInteger(n) && n >= MIN_N && n <= stare.max;
       });
       stare.istoric = Array.isArray(d.istoric) ? d.istoric : [];
       stare.ultima = Array.isArray(d.ultima) ? d.ultima : [];
     } catch (e) {
-      stare = { max: MAX_IMPL, folosite: [], istoric: [], ultima: [] };
+      stare = { max: MAX_IMPL, cate: 6, folosite: [], istoric: [], ultima: [] };
     }
   }
 
@@ -413,8 +415,7 @@
     var disp = ramase();
 
     if (disp.length === 0) {
-      intreaba("Toate numerele au fost extrase. Resetez bazinul?",
-        function (da) { if (da) reset(true); });
+      spune("Toate numerele au fost extrase");
       return;
     }
 
@@ -424,14 +425,9 @@
       return;
     }
 
-    if (cate > disp.length) {
-      intreaba("Ai cerut " + cate + ", dar au mai r\u0103mas doar " + disp.length +
-               ". Extrag toate cele " + disp.length + " numere r\u0103mase?",
-        function (da) { if (da) executa(disp, disp.length); });
-      return;
-    }
-
-    executa(disp, cate);
+    // Daca au mai ramas mai putine decat ai cerut, le extrage pe cele ramase.
+    // Fara intrebare: singurul mesaj de final este cel cu OK, de mai sus.
+    executa(disp, Math.min(cate, disp.length));
   }
 
   function executa(disp, cate) {
@@ -468,10 +464,7 @@
 
   function aplicaMax(nou) {
     stare.max = nou;
-    var camp = document.getElementById("cate");
-    var v = parseInt(camp.value, 10);
-    if (!Number.isInteger(v) || v > nou) camp.value = Math.min(v || 1, nou);
-
+    if (stare.cate > nou) stare.cate = nou;   // nu poti cere mai multe decat exista
     salveaza();
     deseneaza();
   }
@@ -487,13 +480,8 @@
     deseneaza();
   }
 
-  function reset(fara_confirmare) {
-    if (!fara_confirmare) {
-      intreaba("\u0218terg tot istoricul \u0219i repun toate numerele \u00een bazin?",
-        function (da) { if (da) reset(true); });
-      return;
-    }
-    stare.folosite = []; stare.istoric = []; stare.ultima = [];  // "max" ramane
+  function reset() {
+    stare.folosite = []; stare.istoric = []; stare.ultima = [];  // "max" si "cate" raman
     salveaza();
     deseneaza();
   }
@@ -588,11 +576,11 @@
     // limite steppere
     document.getElementById("maxim").value = stare.max;
 
+    // "Cate numere" arata alegerea utilizatorului, nu cate au mai ramas:
+    // altfel valoarea s-ar pierde pe masura ce bazinul se goleste.
     var camp = document.getElementById("cate");
-    camp.max = Math.max(1, disp.length);
-    if (parseInt(camp.value, 10) > disp.length && disp.length > 0) {
-      camp.value = disp.length;
-    }
+    camp.max = stare.max;
+    camp.value = stare.cate;
 
     // istoric
     var ist = document.getElementById("istoric");
@@ -614,17 +602,25 @@
   }
 
   function ajusteaza(delta) {
-    var camp = document.getElementById("cate");
-    var v = parseInt(camp.value, 10);
-    if (!Number.isInteger(v)) v = 1;
-    var maxim = Math.max(1, ramase().length);
-    camp.value = Math.min(maxim, Math.max(1, v + delta));
+    var v = parseInt(document.getElementById("cate").value, 10);
+    if (!Number.isInteger(v)) v = stare.cate;
+    stare.cate = Math.min(stare.max, Math.max(1, v + delta));
+    salveaza();
+    deseneaza();
+  }
+
+  function scrieCate() {                   // valoare tastata direct in camp
+    var v = parseInt(document.getElementById("cate").value, 10);
+    if (Number.isInteger(v)) stare.cate = Math.min(stare.max, Math.max(1, v));
+    salveaza();
+    deseneaza();
   }
 
   // ------------------------------------------------------------------ pornire
   document.getElementById("genereaza").addEventListener("click", genereaza);
   document.getElementById("minus").addEventListener("click", function () { ajusteaza(-1); });
   document.getElementById("plus").addEventListener("click", function () { ajusteaza(1); });
+  document.getElementById("cate").addEventListener("change", scrieCate);
   document.getElementById("minusMax").addEventListener("click", function () { schimbaMax(stare.max - 1); });
   document.getElementById("plusMax").addEventListener("click", function () { schimbaMax(stare.max + 1); });
   document.getElementById("maxim").addEventListener("change", function () {
@@ -632,7 +628,7 @@
   });
   document.getElementById("copiaza").addEventListener("click", copiaza);
   document.getElementById("anuleaza").addEventListener("click", anuleaza);
-  document.getElementById("reset").addEventListener("click", function () { reset(false); });
+  document.getElementById("reset").addEventListener("click", reset);
 
   document.getElementById("dlgDa").addEventListener("click", function () { inchideDlg(true); });
   document.getElementById("dlgNu").addEventListener("click", function () { inchideDlg(false); });
