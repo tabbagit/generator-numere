@@ -31,9 +31,13 @@ h1{font-size:31px;font-weight:500;letter-spacing:.3px;margin:0}
 .ball{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:bold;flex:0 0 48px;user-select:none}
 .ball.available{background:var(--orange);border:2px solid var(--orange2);color:#111}
 .ball.used{background:#667587;border:2px solid #8090a3;color:#edf2f6}
+.ball.excluded{background:transparent;border:2px dashed rgba(255,107,107,.55);color:rgba(255,130,130,.85);text-decoration:line-through}
 .legend{height:38px;margin-top:9px;border:1px solid var(--border);border-radius:14px;display:flex;align-items:center;gap:28px;padding:0 20px;color:#91a5b8;font-size:11px}
 .dot{width:24px;height:24px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:5px}
 .dot.orange{background:var(--orange)} .dot.gray{background:#667587}
+.legend>span{white-space:nowrap}
+.legend.three{gap:16px;padding:0 12px}
+.dot.excl{background:transparent;border:2px dashed rgba(255,107,107,.7)}
 
 .right{min-width:0;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:10px}
 .settings{padding:16px 18px}
@@ -42,10 +46,15 @@ h1{font-size:31px;font-weight:500;letter-spacing:.3px;margin:0}
 .field{display:flex;align-items:center;gap:8px;color:#7692aa;font-weight:bold;font-size:13px}
 input{width:118px;height:42px;border-radius:10px;border:2px solid #28506f;background:#071522;color:#f1f5f8;font-size:17px;padding:0 12px;outline:none}
 input:focus{border-color:#3d7198}
-.actions{padding:10px 12px;display:flex;gap:12px}
+.note{margin-top:9px;color:var(--muted);font-size:12px;line-height:1.4}
+.sel{margin-top:12px;padding-top:12px;border-top:1px solid #133049}
+.sel-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+#selectBtn{height:42px;padding:0 18px;border-radius:10px;background:#285c88;color:#eef4f8;font-size:14px}
+.actions{padding:10px 12px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px 12px}
 button{border:0;border-radius:13px;height:54px;font-size:16px;font-weight:bold;cursor:pointer}
-#draw{background:var(--orange);color:#111;flex:1}
-#reset{background:#183653;color:#e5edf4;width:112px}
+#draw{background:var(--orange);color:#111;grid-column:span 4}
+#drawAll{background:transparent;border:2px solid var(--orange);color:var(--orange);grid-column:span 2}
+.nav,#reset{background:#183653;color:#e5edf4;grid-column:span 2;height:44px;font-size:14px}
 button:disabled{opacity:.55;cursor:not-allowed}
 
 .results{padding:14px 12px 10px;display:flex;flex-direction:column;min-height:0}
@@ -63,6 +72,11 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .blue{color:#19a0ff}.orangeText{color:var(--orange)}.greenText{color:var(--green)}
 
 footer{height:30px;flex:0 0 30px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;color:#617b92;font-size:11px;font-style:italic}
+@media (min-width:601px) and (max-height:860px){
+  html,body{height:auto;overflow-y:auto}
+  .app{height:auto;min-height:100vh}
+  .results{min-height:340px}
+}
 @media (max-width:1200px){
   .main{grid-template-columns:350px minmax(0,1fr)}
   header{padding-left:20px;padding-right:20px}
@@ -194,8 +208,23 @@ footer{height:30px;flex:0 0 30px;display:flex;justify-content:space-between;alig
     height: 50px;
     font-size: 14px;
   }
-  #reset {
-    width: 86px;
+  .nav, #reset {
+    height: 44px;
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .sel-row {
+    gap: 8px;
+  }
+  #selectBtn {
+    flex: 1;
+    min-height: 44px;
+    height: 44px;
+    font-size: 12px;
+    padding: 0 8px;
+  }
+  .note {
+    font-size: 11px;
   }
   .results {
     height: 390px;
@@ -288,6 +317,7 @@ footer{height:30px;flex:0 0 30px;display:flex;justify-content:space-between;alig
     <div class="legend">
       <span><span class="dot orange"></span>= disponibil</span>
       <span><span class="dot gray"></span>= deja extras</span>
+      <span id="legendExcluded" style="display:none"><span class="dot excl"></span>= exclus</span>
     </div>
   </section>
 
@@ -299,10 +329,21 @@ footer{height:30px;flex:0 0 30px;display:flex;justify-content:space-between;alig
         <label class="field">Până la: <input id="to" type="number" value="49" min="1"></label>
         <label class="field">CÂTE NUMERE? <input id="count" type="number" value="6" min="1"></label>
       </div>
+      <div class="note" id="groupNote"></div>
+      <div class="sel">
+        <div class="sel-row">
+          <label class="field">CÂTE PĂSTREZ? <input id="keep" type="number" value="49" min="1"></label>
+          <button id="selectBtn"></button>
+        </div>
+        <div class="note" id="selNote"></div>
+      </div>
     </div>
 
     <div class="panel actions">
       <button id="draw">▶ &nbsp; EXTRAGE NUMERE</button>
+      <button id="drawAll">▶▶ &nbsp; TOATE GRUPELE</button>
+      <button id="undo" class="nav">↶ &nbsp; UN PAS ÎNAPOI</button>
+      <button id="redo" class="nav">↷ &nbsp; UN PAS ÎNAINTE</button>
       <button id="reset">↻ &nbsp; RESET</button>
     </div>
 
@@ -311,7 +352,7 @@ footer{height:30px;flex:0 0 30px;display:flex;justify-content:space-between;alig
       <div class="result-scroll" id="resultScroll"><div class="result-grid" id="resultGrid"></div></div>
       <div class="copy-area">
         <button class="copy" id="copyLast">▣ &nbsp; COPIAZĂ ULTIMELE NUMERE EXTRASE</button>
-        <button class="copy" id="copyAll">▣ &nbsp; COPIAZĂ TOATE NUMERELE</button>
+        <button class="copy" id="copyAll">▣ &nbsp; COPIAZĂ TOATE EXTRAGERILE</button>
       </div>
     </div>
 
@@ -328,7 +369,15 @@ footer{height:30px;flex:0 0 30px;display:flex;justify-content:space-between;alig
 
 <script>
 const $ = id => document.getElementById(id);
-let numbers = [], used = new Set(), allDrawn = [], lastDraw = [], drawing = false;
+
+let selectie = null;          // etapa 1: numerele pastrate (sortate); null = fara selectie
+let istoric = [];             // extragerile, in ordine: [{numere:[...], lot?}]
+let refacere = [];            // pasii anulati; "UN PAS INAINTE" il ia pe ultimul
+let prevSize = 0;             // marimea intervalului la ultima afisare
+let drawing = false, runId = 0;
+let animUsed = new Set();     // numerele marcate in timpul animatiei
+
+const DRAW_TEXT = '▶  EXTRAGE NUMERE';
 
 function shuffle(a){
   for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
@@ -340,89 +389,289 @@ function rangeValues(){
   if(a>b) [a,b]=[b,a];
   return [a,b];
 }
-function rebuildAvailable(){
-  const [a,b]=rangeValues(); numbers=[];
-  for(let i=a;i<=b;i++) numbers.push(i);
-  used=new Set([...used].filter(n=>n>=a&&n<=b));
-  $('rangeLabel').textContent=`(${a} – ${b})`;
-  $('numberGrid').innerHTML='';
-  numbers.forEach(n=>{
-    const d=document.createElement('div');
-    d.className='ball '+(used.has(n)?'used':'available');
-    d.textContent=n;
-    $('numberGrid').appendChild(d);
-  });
-  updateStats();
-}
-function updateStats(){
-  const total=numbers.length, drawn=used.size;
-  $('statTotal').textContent=total; $('statDrawn').textContent=drawn; $('statRemain').textContent=Math.max(0,total-drawn);
-  $('total').textContent=allDrawn.length;
-}
-function addRow(vals){
-  const row=document.createElement('div'); row.className='result-row';
-  vals.forEach(n=>{
-    const d=document.createElement('div'); d.className='result-ball'; d.textContent=n; row.appendChild(d);
-  });
-  $('resultGrid').appendChild(row);
-  $('resultScroll').scrollTop=$('resultScroll').scrollHeight;
-}
-function available(){ return numbers.filter(n=>!used.has(n)); }
+function rangeNumbers(){ const [a,b]=rangeValues(), out=[]; for(let i=a;i<=b;i++) out.push(i); return out; }
 
+// numerele din care se extrage: selectia, daca exista, altfel tot intervalul
+function pool(){ return selectie ? selectie.slice() : rangeNumbers(); }
+function usedSet(){
+  const s=new Set(animUsed);
+  istoric.forEach(e=>e.numere.forEach(n=>s.add(n)));
+  return s;
+}
+function available(){ const u=usedSet(); return pool().filter(n=>!u.has(n)); }
+
+// intrarile adaugate de ultima actiune ("TOATE GRUPELE" le leaga prin acelasi "lot")
+function lastEntries(){
+  if(!istoric.length) return [];
+  const last=istoric[istoric.length-1];
+  if(last.lot==null) return [last];
+  let i=istoric.length-1;
+  while(i>0 && istoric[i-1].lot===last.lot) i--;
+  return istoric.slice(i);
+}
+
+function readInt(id, def){ const v=parseInt($(id).value,10); return Number.isFinite(v)?v:def; }
+function keepValue(){ const size=rangeNumbers().length; return Math.min(size, Math.max(1, readInt('keep', size))); }
+function countValue(){ return Math.max(1, readInt('count', 1)); }
+
+// "20 de grupe", "16 grupe", "o grupa"
+function plural(n, unu, multe){
+  if(n===1) return unu;
+  const r=n%100;
+  return n+(r===0||r>=20?' de ':' ')+multe;
+}
+
+function selectionText(listMax){
+  const [a,b]=rangeValues(), inSel=new Set(selectie), excl=[];
+  for(let n=a;n<=b;n++) if(!inSel.has(n)) excl.push(n);
+  let t=`Selecție: ${selectie.length} din ${a}–${b}.`;
+  const shortEx=excl.length<=selectie.length, list=shortEx?excl:selectie;
+  if(list.length && list.length<=listMax)
+    t+=(shortEx?(excl.length===1?' Exclus: ':' Excluse: '):' Păstrate: ')+list.join(', ');
+  return t;
+}
+
+// ------------------------------------------------------------------ afisare
+function render(){
+  const [a,b]=rangeValues(), size=b-a+1, used=usedSet(), inSel=selectie?new Set(selectie):null;
+  prevSize=size;
+
+  $('rangeLabel').textContent=`(${a} – ${b})`;
+  const grid=$('numberGrid'); grid.innerHTML='';
+  for(let n=a;n<=b;n++){
+    const d=document.createElement('div');
+    d.className='ball '+(inSel&&!inSel.has(n)?'excluded':used.has(n)?'used':'available');
+    d.textContent=n;
+    grid.appendChild(d);
+  }
+  $('legendExcluded').style.display=selectie?'':'none';
+  document.querySelector('.legend').classList.toggle('three',!!selectie);
+
+  const total=pool().length;
+  $('statTotal').textContent=total; $('statDrawn').textContent=used.size; $('statRemain').textContent=Math.max(0,total-used.size);
+  $('total').textContent=used.size;
+
+  const rg=$('resultGrid'); rg.innerHTML='';
+  istoric.forEach(e=>{
+    const row=document.createElement('div'); row.className='result-row';
+    e.numere.forEach(n=>{
+      const d=document.createElement('div'); d.className='result-ball'; d.textContent=n; row.appendChild(d);
+    });
+    rg.appendChild(row);
+  });
+  $('resultScroll').scrollTop=$('resultScroll').scrollHeight;
+
+  // etapa 1: butonul spune exact ce face
+  const k=keepValue(), btn=$('selectBtn');
+  if(k>=size){
+    btn.textContent=selectie?'RENUNȚĂ LA SELECȚIE':`EXTRAGE ${size} DIN ${size}`;
+    btn.disabled=drawing||!selectie;
+  }else{
+    btn.textContent=(selectie?'SELECȚIE NOUĂ: ':'EXTRAGE ')+`${k} DIN ${size}`;
+    btn.disabled=drawing;
+  }
+  $('selNote').textContent = selectie ? selectionText(15)
+    : k<size ? `Păstrezi ${k}, excluzi ${size-k}, la întâmplare. Extragerile se fac apoi doar din cele păstrate.`
+    : 'Opțional. Scade „Câte păstrez?” ca să excluzi numere la întâmplare.';
+
+  // cate grupe ies din ce a ramas
+  const av=total-used.size, c=countValue();
+  if(!av){
+    $('groupNote').textContent='Nu mai sunt numere disponibile.';
+  }else{
+    const full=Math.floor(av/c), rest=av%c, parts=[];
+    if(full) parts.push(full===1?`o grupă de ${c}`:`${plural(full,'','grupe')} de câte ${c}`);
+    if(rest) parts.push(`o grupă de ${rest}`);
+    $('groupNote').textContent=`Disponibile: ${av}, adică ${parts.join(' și ')}.`;
+  }
+
+  $('draw').disabled=drawing; $('drawAll').disabled=drawing; $('reset').disabled=drawing;
+  $('copyLast').disabled=drawing; $('copyAll').disabled=drawing;
+  $('undo').disabled=drawing||(!istoric.length&&!selectie);
+  $('redo').disabled=drawing||!refacere.length;
+}
+
+function startDrawing(){ drawing=true; $('draw').textContent='EXTRAGERE...'; render(); }
+function stopDrawing(){ drawing=false; animUsed=new Set(); $('draw').textContent=DRAW_TEXT; }
+
+// ----------------------------------------------------------------- extrageri
 function draw(){
   if(drawing) return;
-  const req=Math.max(1,parseInt($('count').value)||1);
   const avail=available();
   if(!avail.length){ showDone(); return; }
 
-  const take=Math.min(req,avail.length); // ultimele numere se extrag automat
+  const take=Math.min(countValue(),avail.length); // ultimele numere se extrag automat
   const selected=shuffle(avail.slice()).slice(0,take);
-  drawing=true; $('draw').disabled=true; $('reset').disabled=true;
-  $('copyLast').disabled=true; $('copyAll').disabled=true; $('draw').textContent='EXTRAGERE...';
-  lastDraw=selected.slice();
+  refacere=[];
+  startDrawing();
 
-  let i=0;
+  const id=runId; let i=0;
   const step=()=>{
+    if(id!==runId) return;                       // RESET in timpul animatiei
     if(i>=selected.length){
-      addRow(selected); 
-      updateStats(); 
-      rebuildAvailable();
-      drawing=false; $('draw').disabled=false; $('reset').disabled=false; $('copyLast').disabled=false; $('copyAll').disabled=false;
-      $('draw').textContent='▶  EXTRAGE NUMERE';
-      if(available().length===0) setTimeout(showDone,350);
+      istoric.push({numere:selected});
+      stopDrawing(); render();
+      if(!available().length) setTimeout(showDone,350);
       return;
     }
-    const n=selected[i++]; used.add(n); allDrawn.push(n); updateStats(); rebuildAvailable();
+    animUsed.add(selected[i++]); render();
     setTimeout(step,70); // rapid
   };
   step();
 }
-function showDone(){
+
+function drawAll(){
+  if(drawing) return;
+  const avail=shuffle(available());
+  if(!avail.length){ showDone(); return; }
+
+  const c=countValue(), lot=Date.now(), groups=[];
+  for(let i=0;i<avail.length;i+=c) groups.push(avail.slice(i,i+c));
+  refacere=[];
+  startDrawing();
+
+  const id=runId; let g=0;
+  const step=()=>{
+    if(id!==runId) return;
+    if(g>=groups.length){ stopDrawing(); render(); setTimeout(showDone,350); return; }
+    istoric.push({numere:groups[g++],lot}); render();  // cate un rand pe grupa
+    setTimeout(step,70);
+  };
+  step();
+}
+
+// ------------------------------------------------------------ etapa 1: selectia
+function selectKeep(){
+  if(drawing) return;
+  const nums=rangeNumbers(), size=nums.length, [a,b]=rangeValues(), k=keepValue();
+  $('keep').value=k;
+
+  if(k>=size){
+    if(!selectie){ render(); return; }
+    askBox('RENUNȚ LA SELECȚIE?', `Revin la toate numerele ${a}–${b}. Extragerile de până acum se șterg.`, ()=>{
+      selectie=null; istoric=[]; refacere=[]; render();
+    });
+    return;
+  }
+
+  const make=()=>{
+    refacere=[]; istoric=[];
+    selectie=shuffle(nums.slice()).slice(0,k).sort((x,y)=>x-y);
+    render();
+  };
+  if(selectie||istoric.length)
+    askBox('SELECȚIE NOUĂ?', `Extrag ${k} din ${a}–${b}. Selecția și extragerile de până acum se șterg.`, make);
+  else make();
+}
+
+// --------------------------------------------------------- inapoi / inainte
+function undo(){
+  if(drawing) return;
+  if(!istoric.length){
+    if(selectie){ refacere.push({tip:'selectie',selectie}); selectie=null; render(); }
+    return;
+  }
+  const out=lastEntries();
+  istoric.splice(istoric.length-out.length);
+  refacere.push({tip:'grupe',intrari:out});
+  render();
+}
+
+function redo(){
+  if(drawing) return;
+  const pas=refacere[refacere.length-1];
+  if(!pas) return;
+  // verificare de siguranta: pasul trebuie sa se potriveasca cu starea de acum
+  let ok;
+  if(pas.tip==='selectie'){
+    const [a,b]=rangeValues();
+    ok=!selectie&&!istoric.length&&pas.selectie.every(n=>n>=a&&n<=b);
+  }else{
+    const av=new Set(available());
+    ok=pas.intrari.every(e=>e.numere.every(n=>av.has(n)));
+  }
+  if(!ok){ refacere=[]; render(); return; }
+
+  refacere.pop();
+  if(pas.tip==='selectie') selectie=pas.selectie.slice();
+  else istoric.push(...pas.intrari);
+  render();
+}
+
+function resetAll(){
+  runId++; stopDrawing();
+  selectie=null; istoric=[]; refacere=[];
+  // "Cate pastrez?" urmeaza intervalul daca era pe "toate"
+  const size=rangeNumbers().length;
+  let k=readInt('keep',size);
+  if(k>=prevSize||k>size) k=size;
+  $('keep').value=Math.max(1,k);
+  render();
+}
+
+// ------------------------------------------------------------------ ferestre
+let closeBox=null;
+function box(html, buttons){
+  if(closeBox) closeBox();
   const overlay=document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.62);display:grid;place-items:center;z-index:20;opacity:0;transition:opacity .25s';
-  const box=document.createElement('div');
-  box.style.cssText='width:min(520px,90vw);padding:34px;border-radius:22px;background:#0b1e2f;border:2px solid #21c878;box-shadow:0 20px 70px rgba(0,0,0,.55);text-align:center;transform:scale(.82);transition:transform .3s';
-  box.innerHTML='<div style="font-size:50px;color:#21c878;margin-bottom:10px">✓</div><div style="font-size:24px;font-weight:bold">TOATE NUMERELE AU FOST EXTRASE!</div><div style="margin-top:10px;color:#8da3b7">Nu mai există numere disponibile.</div><button id="doneClose" style="margin-top:24px;width:150px;background:#21c878;color:#071522">ÎNCHIDE</button>';
-  overlay.appendChild(box); document.body.appendChild(overlay);
-  requestAnimationFrame(()=>{overlay.style.opacity=1;box.style.transform='scale(1)'});
-  $('doneClose').onclick=()=>{box.style.transform='scale(.82)';overlay.style.opacity=0;setTimeout(()=>overlay.remove(),250)};
+  const inner=document.createElement('div');
+  inner.style.cssText='width:min(520px,90vw);padding:34px;border-radius:22px;background:#0b1e2f;border:2px solid #21c878;box-shadow:0 20px 70px rgba(0,0,0,.55);text-align:center;transform:scale(.82);transition:transform .3s';
+  inner.innerHTML=html;
+  const row=document.createElement('div');
+  row.style.cssText='margin-top:24px;display:flex;gap:12px;justify-content:center';
+  const close=()=>{ closeBox=null; inner.style.transform='scale(.82)'; overlay.style.opacity=0; setTimeout(()=>overlay.remove(),250); };
+  buttons.forEach(bt=>{
+    const el=document.createElement('button');
+    el.textContent=bt.label;
+    el.style.cssText='width:150px;'+(bt.primary?'background:#21c878;color:#071522':'background:#183653;color:#e5edf4');
+    el.onclick=()=>{ close(); if(bt.onClick) bt.onClick(); };
+    row.appendChild(el);
+  });
+  inner.appendChild(row);
+  overlay.onclick=e=>{ if(e.target===overlay) close(); };
+  overlay.appendChild(inner); document.body.appendChild(overlay);
+  closeBox=close;
+  requestAnimationFrame(()=>{overlay.style.opacity=1;inner.style.transform='scale(1)'});
 }
-function resetAll(){
-  used.clear();allDrawn=[];lastDraw=[];$('resultGrid').innerHTML='';$('total').textContent='0';
-  rebuildAvailable();
+function showDone(){
+  box('<div style="font-size:50px;color:#21c878;margin-bottom:10px">✓</div>'+
+      `<div style="font-size:24px;font-weight:bold">${selectie?'TOATE NUMERELE DIN SELECȚIE AU FOST EXTRASE!':'TOATE NUMERELE AU FOST EXTRASE!'}</div>`+
+      '<div style="margin-top:10px;color:#8da3b7">Nu mai există numere disponibile.</div>',
+      [{label:'ÎNCHIDE',primary:true}]);
 }
+function askBox(title, text, onYes){
+  box(`<div style="font-size:24px;font-weight:bold">${title}</div>`+
+      `<div style="margin-top:10px;color:#8da3b7">${text}</div>`,
+      [{label:'RENUNȚ'},{label:'CONFIRMĂ',primary:true,onClick:onYes}]);
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&closeBox) closeBox(); });
+
+// ------------------------------------------------------------------- copiere
 async function copyText(text,btn,normal){
   try{await navigator.clipboard.writeText(text);}
   catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
   btn.textContent='✓ COPIAT';
   setTimeout(()=>btn.textContent=normal,1200);
 }
+// o linie pe extragere; selectia (facuta prima) sta primul rand
+const lastText=()=>lastEntries().map(e=>e.numere.join(', ')).join('\n');
+const allText=()=>(selectie?[selectionText(Infinity)]:[]).concat(istoric.map(e=>e.numere.join(', '))).join('\n');
+
 $('draw').onclick=draw;
+$('drawAll').onclick=drawAll;
+$('undo').onclick=undo;
+$('redo').onclick=redo;
 $('reset').onclick=resetAll;
-$('copyLast').onclick=()=>copyText(lastDraw.join(', '),$('copyLast'),'▣  COPIAZĂ ULTIMELE NUMERE EXTRASE');
-$('copyAll').onclick=()=>copyText(allDrawn.join(', '),$('copyAll'),'▣  COPIAZĂ TOATE NUMERELE');
+$('selectBtn').onclick=selectKeep;
+$('copyLast').onclick=()=>copyText(lastText(),$('copyLast'),'▣  COPIAZĂ ULTIMELE NUMERE EXTRASE');
+$('copyAll').onclick=()=>copyText(allText(),$('copyAll'),'▣  COPIAZĂ TOATE EXTRAGERILE');
 $('from').onchange=resetAll; $('to').onchange=resetAll;
-rebuildAvailable();
+$('keep').oninput=render;
+$('keep').onchange=()=>{ $('keep').value=keepValue(); render(); };
+$('count').oninput=render;
+$('keep').value=rangeNumbers().length;
+render();
 </script>
 </body>
 </html>
