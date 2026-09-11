@@ -105,15 +105,22 @@
   }
 
   /* ---------------------------------------------------- extragerea curenta */
-  #rezultat {
+  #rezultat { margin-top: 10px; }
+  /* sus: ultima varianta, cu bile mari */
+  #rezultat .ultima {
     display: flex; flex-wrap: wrap; gap: 8px;
     justify-content: center; align-items: center;
-    min-height: 108px; margin-top: 10px;
+    min-height: 108px;
   }
   #rezultat .gol { color: var(--faint); font-size: 14px; text-align: center; }
 
-  /* mai multe grupe generate deodata: cate un rand pe grupa */
-  #rezultat.grupe { display: block; max-height: 380px; overflow-y: auto; }
+  /* dedesubt: variantele de dinainte, cea mai noua prima, cate un rand pe varianta */
+  #rezultat .anterioare {
+    margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line);
+    max-height: 300px; overflow-y: auto;
+  }
+  #rezultat .anterioare:empty { display: none; }
+  .rand-grupa .bila.static { animation: none; }
   .rand-grupa {
     display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
     padding: 3px 0;
@@ -202,11 +209,11 @@
     cursor: default; transform: none;
   }
 
-  #genereaza {
-    --c1: #2fcf6a; --c2: #15803d; --cut: 16px;
-    width: 100%; padding: 20px 20px 23px;
-    font-size: 22px; letter-spacing: .14em;
-  }
+  /* cele doua butoane de extragere: aceeasi marime (randuri egale in grila,
+     chiar daca un text trece pe doua randuri) */
+  .extrageri { display: grid; grid-auto-rows: 1fr; gap: 10px; }
+  .extrageri button { width: 100%; margin: 0; font-size: 16px; padding: 15px 8px 18px; }
+  #genereaza { --c1: #2fcf6a; --c2: #15803d; }
 
   .secundare {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -220,7 +227,7 @@
 
   /* culori, pe familii: generare (verde, turcoaz), selectie (auriu, ca bilele),
      copiere (albastru), inapoi/inainte (indigo), stergere (caramiziu) */
-  #toate       { --c1: #26b5a4; --c2: #0f7266; font-size: 16px; padding: 15px 8px 18px; }
+  #toate       { --c1: #26b5a4; --c2: #0f7266; }
   #selecteaza  { --c1: #e8b43a; --c2: #b27a12; --ink: #2a1b00; text-shadow: none; }
   #copiaza, #copiazaTot { --c1: #4a8fd0; --c2: #285e98; }
   #anuleaza, #refa      { --c1: #7477d4; --c2: #4b4ea3; }
@@ -230,7 +237,7 @@
   #notaGrupe { margin: -4px 0 12px; }
   #cardSel .stepper { margin: 12px 0 0; }
 
-  /* RESET: acelasi corp de litera ca GENEREAZA, dar rosu */
+  /* RESET: caramiziu */
   #reset {
     --c1: #bf6a60; --c2: #8c433b; --ink: #fff3f0; --cut: 14px;
     grid-column: 1 / -1;
@@ -378,8 +385,10 @@
   </div>
   <div class="nota" id="notaGrupe"></div>
 
-  <button id="genereaza">GENEREAZ&#258;</button>
-  <button class="sec-btn lat" id="toate">Extrage variante</button>
+  <div class="extrageri">
+    <button id="genereaza">Extrage c&acirc;te o variant&#259;</button>
+    <button class="sec-btn" id="toate">Extrage variante</button>
+  </div>
 
   <div class="secundare">
     <button class="sec-btn" id="copiaza">Copiaz&#259; ultima extragere</button>
@@ -1008,44 +1017,51 @@
         noi = new Set(), inSel = stare.selectie ? new Set(stare.selectie) : null;
     ultimele.forEach(function (i) { i.numere.forEach(function (n) { noi.add(n); }); });
 
-    // "Extragerea curenta" se reconstruieste doar cand se schimba. Altfel
-    // bilele ar reporni animatia la fiecare redesenare.
+    // "Extragerea curenta": sus ultima varianta (bile mari), dedesubt toate
+    // variantele de dinainte, cea mai noua prima. Se reconstruieste doar cand se
+    // schimba istoricul, altfel bilele ar reporni animatia la fiecare redesenare.
     var rez = document.getElementById("rezultat");
+    var vari = stare.istoric, nIst = vari.length;
     var cheie = !stare.evidentiaza ? "-" :
-      (stare.selectie ? "s" : "") + stare.istoric.length + ":" +
-      ultimele.map(function (i) { return i.numere.join(","); }).join("|");
+      (stare.selectie ? "s" : "") + nIst + ":" +
+      (nIst ? vari[nIst - 1].numere.join(",") : "") + ":" + ultimele.length;
     if (rez.getAttribute("data-afisat") !== cheie) {
       rez.setAttribute("data-afisat", cheie);
       rez.innerHTML = "";
-      rez.classList.toggle("grupe", ultimele.length > 1);
-      rez.scrollTop = 0;
+      var sus = document.createElement("div");
+      sus.className = "ultima";
+      var jos = document.createElement("div");
+      jos.className = "anterioare";
+      rez.appendChild(sus);
+      rez.appendChild(jos);
 
-      if (stare.evidentiaza && !ultimele.length) {
-        rez.innerHTML = stare.selectie
-          ? '<span class="gol">selec\u021bia e gata, apas\u0103 GENEREAZ\u0102</span>'
-          : '<span class="gol">apas\u0103 GENEREAZ\u0102</span>';
-      } else if (ultimele.length === 1) {
-        var n = ultimele[0].numere.length;
+      if (stare.evidentiaza && !nIst) {
+        sus.innerHTML = stare.selectie
+          ? '<span class="gol">selec\u021bia e gata, apas\u0103 EXTRAGE C\u00c2TE O VARIANT\u0103</span>'
+          : '<span class="gol">apas\u0103 EXTRAGE C\u00c2TE O VARIANT\u0103</span>';
+      } else if (stare.evidentiaza) {
+        var ultima = vari[nIst - 1].numere, n = ultima.length;
         var dim = n <= 6 ? 58 : n <= 12 ? 46 : n <= 24 ? 36 : 28;
-        ultimele[0].numere.forEach(function (num, i) {
-          rez.appendChild(bila(num, dim, i * 55));
+        ultima.forEach(function (num, i) {
+          sus.appendChild(bila(num, dim, i * 55));
         });
-      } else if (ultimele.length > 1) {
-        var lung = Math.max.apply(null, ultimele.map(function (i) { return i.numere.length; }));
+
+        // randurile: doar cele adaugate acum (la "toate cele X variante") apar animat
+        var primaNoua = nIst - ultimele.length;
+        var lung = 0;
+        for (var r = 0; r < nIst - 1; r++) lung = Math.max(lung, vari[r].numere.length);
         var d2 = lung <= 8 ? 32 : lung <= 12 ? 26 : 22;
-        var start = stare.istoric.length - ultimele.length;
-        ultimele.forEach(function (intrare, g) {
-          var rand = document.createElement("div");
-          rand.className = "rand-grupa";
-          var idx = document.createElement("span");
-          idx.className = "idx";
-          idx.textContent = "#" + (start + g + 1);
-          rand.appendChild(idx);
-          intrare.numere.forEach(function (num) {
-            rand.appendChild(bila(num, d2, Math.min(g, 12) * 40));
-          });
-          rez.appendChild(rand);
-        });
+        var fs = Math.round(d2 * 0.42);
+        var randuri = [];
+        for (var j = nIst - 2; j >= 0; j--) {
+          var nou = j >= primaNoua, pas = nIst - 2 - j;
+          var bile = vari[j].numere.map(function (num) {
+            return '<div class="bila' + (nou ? '' : ' static') + '" style="width:' + d2 + 'px;height:' + d2 +
+                   'px;font-size:' + fs + 'px;animation-delay:' + (Math.min(pas, 12) * 40) + 'ms">' + num + '</div>';
+          }).join("");
+          randuri.push('<div class="rand-grupa"><span class="idx">#' + (j + 1) + '</span>' + bile + '</div>');
+        }
+        jos.innerHTML = randuri.join("");
       }
     }
 
