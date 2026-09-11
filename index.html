@@ -10,6 +10,18 @@
 <title>Generator numere</title>
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%2315161c'/%3E%3Ccircle cx='90' cy='90' r='52' fill='%23f0b429'/%3E%3Ctext x='90' y='90' font-family='Segoe UI,sans-serif' font-size='54' font-weight='700' fill='%23241a00' text-anchor='middle' dominant-baseline='central'%3E49%3C/text%3E%3C/svg%3E">
 <style>
+  /* Chakra Petch (SIL Open Font License 1.1), doar literele necesare, inclusa in fisier ca sa mearga si offline */
+  @font-face {
+    font-family: "Chakra Petch"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url(data:font/woff2;base64,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) format("woff2");
+    unicode-range: U+0020-007E,U+00A0-00FF,U+2013,U+2014,U+2018,U+2019,U+201C,U+201D,U+201E,U+2026,U+2212,U+00B7;
+  }
+  @font-face {
+    font-family: "Chakra Petch"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url(data:font/woff2;base64,d09GMgABAAAAAAT0AA4AAAAACuQAAASgAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGjAbgj4cMAZgAGARCAqITIZ8ATYCJANQCywABCAFhCwHIBv3CAieA267MRwovuinPhFbxiYOXHBsQX0tX3ve7v477f2UoAJKIaHIUiBciAswAWYqZmhAXGbG91Ne/psktZwVk5Wn7adPBk+4AeTh+/t27m1ZucQDTmRb6Qe4a55RJgXa+H/5rwgwcEyHkRYVOLBInWEHRVJSx6PwVOA/cGTwCU9FFzsIXKNtDPU3OTRRAp+OQBEAiKkQUEUCXVcgGlKKnO510hB4VmAzBP4fFVCDAnwrddWT3Qyujt7eMykTfYJZQoEDfKQE+UfLfXMPAED+vPxmu9+wAkDpfKdstC0JjBckUuot5OLGTgIJVtFHgAMFBeB5CobKvq1KBaq1k/+2u5mBmhOEoVCQjopKKqrKiiCRHNfmQRAQsdyi/ohsSDQi2sfscJ+VdlyAvZIPcLwt1pr8SAeolK73b29PO2JhNSKICPesvg74bxYDCKA/cRz0IoEBB5pIAk2UE0CUMhYkkomxiByUSCqlheYAAEhUVFYFmMgrSlQEJakqRIUKgBYAhgBVoDGgGcA7YAcAxgrDgAqs7JGbxiblSkUOuwYk+Sv6Rrt7+shKlCcTPClDJoncSEfNrTv/CnnA6qBG1UWueCUO7gxKrKTqh6GHDuh+ZNZHbx95hCg4Il7k6p1DFpEPxKY7T7wMpcdU3OWAZqd5gSvEdqZ5DA8OMqSscKbznQMoZ8brBXhOtQl5QCZaXTkXxSgrvstsq6xfrZqsCrovdevwYHlo9VBG659K8GvJ5SXyIlGaCKjP5f+xS5d+m5921lJ3cQ8h6IHJip1WAbf8MLhVH0cSYGWpalolXAQNp/iCydQIPZP1DzriTqEfv2Bn+9Cx8GNMTFijxWDhvf1pveNId9xpmwEjC7tI9Lfm3cInkZPK9Aak/5g23NLWfHK/qqUx7vjW/BnQv6uaFMldy83QPJJITVIZJU+x87kpQFvaH778pHMJiSxWJM/OB9pTlNAiXjtp7WLr4o/VIesB+DtxOxs7y8Tx+/vUHwma0dbarR3L9KVTu2GTvdOau7V8a661s79/K9y9NQvZo6QJPEd7Af0QSNSjgatMECnpNKIecDmrkJsRnBtgASTR5QZcPeI9HoAEur0R8tLNQ2tlmUnrZwMB9mzMNFVvtF47rlK/srItZKNjVI3dJU4ZIOsr+mQAe2rOL7sfzEU5CwHh6/D2YJlP5X9XF/IFgN/j5A+2Vz+c7/a3++9Vf6T5FJIwAMIHYv8pIf89WoLM2hvZhTCnCQ1pLPmkVnxwNWQRQ0lgxkqV3+AfJIOcb7eVCbQ0cLHOCa7mGEg9I6npBvANsATSdVhgUj8CZ85jgdcf3oJgK3IFBb1hf7uymZhrm4XVSHY6GlpYrHy58pSKRdNSbUENF1EwsFOI1UsFY2jRbmehp8K4+BvrDMK0LOwcYqXSwjArh3I5cmjoYFqDlLIxLExymBSyY+RRyQkrm+XJHhaWRmzjehZGrDzZchftFRo06hDLsBkPlr4sTOy8NsUol+qE6+tYmMWGc8WeOKqmuIuwhRZRMzy4hgxWVyyNiuXeLGXUgXmjsBVmubIJRI2y7/mbaeTo0awTCYD8QFNmAAA=) format("woff2");
+    unicode-range: U+0102,U+0103,U+0218-021B,U+015E,U+015F,U+0162,U+0163;
+  }
+
   :root {
     --bg: #15161c;
     --panel: #1e2029;
@@ -113,14 +125,12 @@
   .stepper .grup { display: flex; align-items: center; gap: 4px; }
 
   .pas {
-    width: 46px; height: 46px; border-radius: 12px;
-    background: var(--sec); border: none; color: var(--text);
-    font-size: 22px; font-weight: 600; cursor: pointer;
+    --c1: #56627f; --c2: #363e56; --ink: #eef1f8; --cut: 8px;
+    width: 46px; height: 46px; padding: 0;
+    font-size: 24px; letter-spacing: 0;
   }
-  .pas:active { background: var(--sec-hi); }
-  .pas:disabled { opacity: .35; }
 
-  #cate, #maxim, #pastreaza {
+  #cate, #maxim, #pastreaza, #nrGrupe {
     width: 62px; height: 46px; border-radius: 12px;
     background: var(--sec); border: 1px solid var(--line);
     color: var(--text); font-size: 20px; font-weight: 650;
@@ -132,31 +142,67 @@
   #maxim::-webkit-outer-spin-button,
   #maxim::-webkit-inner-spin-button,
   #pastreaza::-webkit-outer-spin-button,
-  #pastreaza::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  #pastreaza::-webkit-inner-spin-button,
+  #nrGrupe::-webkit-outer-spin-button,
+  #nrGrupe::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  /* ------------------------------------------------ butoane: forma comuna
+     Colturi taiate, margine de relief jos, lumina sus si un model fin in dungi.
+     Fiecare buton isi da doar culorile: --c1 (sus), --c2 (jos), --ink (text). */
+  .pas, #genereaza, .sec-btn, .dlg-actiuni button {
+    --cut: 11px;
+    position: relative;
+    border: none; cursor: pointer;
+    font-family: "Chakra Petch", "Bahnschrift", "DIN Alternate", ui-monospace, monospace;
+    font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+    line-height: 1.2;
+    color: var(--ink, #fff);
+    background:
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, .07) 0 2px, transparent 2px 8px),
+      linear-gradient(180deg, var(--c1), var(--c2));
+    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)),
+                       calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .30),
+      inset 0 -4px 0 rgba(0, 0, 0, .32);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .30);
+    transition: transform .07s ease, filter .15s ease, box-shadow .07s ease;
+  }
+  .pas:hover, #genereaza:hover, .sec-btn:hover, .dlg-actiuni button:hover { filter: brightness(1.08); }
+  .pas:active, #genereaza:active, .sec-btn:active, .dlg-actiuni button:active {
+    transform: translateY(2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .15),
+      inset 0 -1px 0 rgba(0, 0, 0, .32),
+      inset 0 3px 10px rgba(0, 0, 0, .28);
+  }
+  .pas:disabled, .sec-btn:disabled {
+    filter: grayscale(.85) brightness(.75); opacity: .5;
+    cursor: default; transform: none;
+  }
 
   #genereaza {
-    width: 100%; padding: 20px; border: none; border-radius: 16px;
-    background: var(--accent); color: #fff;
-    font-size: 19px; font-weight: 700; letter-spacing: .06em;
-    font-family: inherit; cursor: pointer;
-    box-shadow: 0 4px 16px rgba(22, 163, 74, .28);
-    transition: transform .08s ease, background .15s ease;
+    --c1: #2fcf6a; --c2: #15803d; --cut: 16px;
+    width: 100%; padding: 20px 20px 23px;
+    font-size: 22px; letter-spacing: .14em;
   }
-  #genereaza:active { transform: scale(.975); background: var(--accent-hi); }
 
   .secundare {
     display: grid; grid-template-columns: 1fr 1fr;
     gap: 8px; margin-top: 10px;
   }
   .sec-btn {
-    padding: 14px 8px; border: none; border-radius: 12px;
-    background: var(--sec); color: var(--text);
-    font-size: 15px; font-weight: 600; letter-spacing: .01em;
-    line-height: 1.25; font-family: inherit; cursor: pointer;
+    padding: 13px 8px 16px;
+    font-size: 14px;
   }
-  .sec-btn:active { background: var(--sec-hi); }
-  .sec-btn:disabled { opacity: .4; cursor: default; }
   .sec-btn.lat { width: 100%; margin-top: 10px; }
+
+  /* culori, pe familii: generare (verde, turcoaz), selectie (auriu, ca bilele),
+     copiere (albastru), inapoi/inainte (indigo), stergere (caramiziu) */
+  #toate       { --c1: #26b5a4; --c2: #0f7266; font-size: 16px; padding: 15px 8px 18px; }
+  #selecteaza  { --c1: #e8b43a; --c2: #b27a12; --ink: #2a1b00; text-shadow: none; }
+  #copiaza, #copiazaTot { --c1: #4a8fd0; --c2: #285e98; }
+  #anuleaza, #refa      { --c1: #7477d4; --c2: #4b4ea3; }
 
   .nota { font-size: 12px; color: var(--dim); line-height: 1.45; }
   #notaSel { margin-top: 10px; }
@@ -165,9 +211,9 @@
 
   /* RESET: acelasi corp de litera ca GENEREAZA, dar rosu */
   #reset {
+    --c1: #bf6a60; --c2: #8c433b; --ink: #fff3f0; --cut: 14px;
     grid-column: 1 / -1;
-    color: var(--rosu);
-    font-size: 19px; font-weight: 700; letter-spacing: .06em;
+    font-size: 19px; letter-spacing: .14em;
   }
 
   /* ----------------------------------------------------------------- bazin */
@@ -245,13 +291,11 @@
   #dlgTxt { font-size: 15px; line-height: 1.5; margin-bottom: 16px; }
   .dlg-actiuni { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .dlg-actiuni button {
-    padding: 14px 8px; border: none; border-radius: 12px;
-    background: var(--sec); color: var(--text);
-    font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer;
+    --c1: #56627f; --c2: #363e56;
+    padding: 13px 8px 16px;
+    font-size: 15px;
   }
-  .dlg-actiuni button:active { background: var(--sec-hi); }
-  #dlgDa { background: var(--accent); color: #fff; }
-  #dlgDa:active { background: var(--accent-hi); }
+  #dlgDa { --c1: #2fcf6a; --c2: #15803d; }
   #supra.simplu .dlg-actiuni { grid-template-columns: 1fr; }
   #supra.simplu #dlgNu { display: none; }
 </style>
@@ -262,7 +306,7 @@
   <header>
     <h1>Generator numere</h1>
     <div class="sub credit">generator f&#259;cut pentru &#537;i la cererea lui Diac Matei</div>
-    <div class="sub" id="sub">1&ndash;49 &middot; f&#259;r&#259; repeti&#539;ie</div>
+    <div class="sub" id="sub">1&ndash;49 &middot; f&#259;r&#259; grupe identice</div>
   </header>
 
   <div id="avert"></div>
@@ -303,10 +347,18 @@
       <button class="pas" id="plus" aria-label="mai multe">+</button>
     </div>
   </div>
+  <div class="stepper">
+    <span class="et">C&acirc;te variante</span>
+    <div class="grup">
+      <button class="pas" id="minusGrupe" aria-label="mai putine variante">&minus;</button>
+      <input id="nrGrupe" type="number" inputmode="numeric" value="9" min="1" max="1000">
+      <button class="pas" id="plusGrupe" aria-label="mai multe variante">+</button>
+    </div>
+  </div>
   <div class="nota" id="notaGrupe"></div>
 
   <button id="genereaza">GENEREAZ&#258;</button>
-  <button class="sec-btn lat" id="toate">Genereaz&#259; toate grupele</button>
+  <button class="sec-btn lat" id="toate">Extrage variante</button>
 
   <div class="secundare">
     <button class="sec-btn" id="copiaza">Copiaz&#259; ultima extragere</button>
@@ -349,15 +401,18 @@
   var MIN_N = 1;              // primul numar din bazin
   var MAX_ABS = 100;          // cel mai mare bazin permis
   var MAX_IMPL = 49;          // bazinul implicit
+  var MAX_GRUPE = 1000;       // cel mult atatea grupe la o apasare
+  var LIMITA_ENUM = 250000;   // pana la atatea combinatii le putem numara pe toate
 
   var CHEIE = "generator_numere_v1";   // aceeasi cheie: salvarile vechi se incarca
 
   function stareNoua() {
     return {
       max: MAX_IMPL, cate: 6,
+      grupe: 9,                // cate grupe face "Genereaza N grupe"
       pastreaza: MAX_IMPL,     // etapa 1: cate numere raman in selectie
       selectie: null,          // null = fara selectie, grupele se fac din 1..max
-      evidentiaza: true, folosite: [], istoric: [],
+      evidentiaza: true, istoric: [],
       refacere: []             // pasii anulati, in ordine; "Un pas inainte" ia ultimul
     };
   }
@@ -366,6 +421,7 @@
   var stocareOk = true;
 
   function total() { return stare.max - MIN_N + 1; }
+  function asc(a, b) { return a - b; }
 
   // Numerele din care se fac grupele: selectia, daca exista, altfel 1..max.
   function bazinCurent() {
@@ -375,8 +431,50 @@
     return out;
   }
   function marime() { return stare.selectie ? stare.selectie.length : total(); }
+  function cateEfectiv() { return Math.min(stare.cate, marime()); }
 
-  // Intrarile din istoric adaugate de ultima actiune. "Genereaza toate grupele"
+  // De cate ori a iesit fiecare numar din bazin, in toate grupele de pana acum.
+  function numarari() {
+    var c = new Map();
+    bazinCurent().forEach(function (n) { c.set(n, 0); });
+    stare.istoric.forEach(function (i) {
+      i.numere.forEach(function (n) { if (c.has(n)) c.set(n, c.get(n) + 1); });
+    });
+    return c;
+  }
+
+  // "Disponibile" = numerele care au iesit cel mai rar. La inceput sunt toate;
+  // dupa ce au iesit toate o data, se reia cu toate (runda noua).
+  function ramase() {
+    var c = numarari(), min = Infinity;
+    c.forEach(function (v) { if (v < min) min = v; });
+    return bazinCurent().filter(function (n) { return c.get(n) === min; });
+  }
+
+  function cheieGrupa(numere) { return numere.slice().sort(asc).join(","); }
+
+  // C(n, k), oprit la "Infinity" cand trece de limita (nu avem nevoie de mai mult)
+  function combinari(n, k) {
+    if (k < 0 || k > n) return 0;
+    k = Math.min(k, n - k);
+    var r = 1;
+    for (var i = 1; i <= k; i++) {
+      r = r * (n - k + i) / i;
+      if (r > LIMITA_ENUM) return Infinity;
+    }
+    return Math.round(r);
+  }
+
+  // Grupele distincte de marimea "cate" care exista deja in istoric
+  function cheiExistente(cate) {
+    var s = new Set();
+    stare.istoric.forEach(function (i) {
+      if (i.numere.length === cate) s.add(cheieGrupa(i.numere));
+    });
+    return s;
+  }
+
+  // Intrarile din istoric adaugate de ultima actiune. "Genereaza N grupe"
   // pune acelasi "lot" pe toate grupele, ca "Un pas inapoi" sa le scoata impreuna.
   function ultimeleIntrari() {
     var ist = stare.istoric;
@@ -420,14 +518,15 @@
           vazut.add(n); sel.push(n);
         }
       });
-      stare.selectie = sel.length ? sel.sort(function (a, b) { return a - b; }) : null;
+      stare.selectie = sel.length ? sel.sort(asc) : null;
+
+      stare.grupe = (Number.isInteger(d.grupe) && d.grupe >= 1 && d.grupe <= MAX_GRUPE)
+        ? d.grupe : Math.ceil(marime() / cateEfectiv());   // salvarile vechi nu au "grupe"
 
       var inBazin = new Set(bazinCurent());
-      stare.folosite = (d.folosite || []).filter(function (n) {
-        return Number.isInteger(n) && inBazin.has(n);
-      });
       stare.istoric = (Array.isArray(d.istoric) ? d.istoric : []).filter(function (i) {
-        return i && Array.isArray(i.numere);
+        return i && Array.isArray(i.numere) && i.numere.length &&
+          i.numere.every(function (n) { return inBazin.has(n); });
       });
       stare.evidentiaza = d.evidentiaza !== false;
       stare.refacere = (Array.isArray(d.refacere) ? d.refacere : []).filter(function (p) {
@@ -503,20 +602,87 @@
     return v % limita;
   }
 
-  function extrage(bazin, cate) {          // Fisher-Yates partial
-    var copie = bazin.slice(), rez = [];
-    cate = Math.min(cate, copie.length);
-    for (var i = 0; i < cate; i++) {
-      var j = i + intAleator(copie.length - i);
-      var t = copie[i]; copie[i] = copie[j]; copie[j] = t;
-      rez.push(copie[i]);
+  function amesteca(arr) {                 // Fisher-Yates complet, pe o copie
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = intAleator(i + 1);
+      var t = a[i]; a[i] = a[j]; a[j] = t;
     }
-    return rez.sort(function (a, b) { return a - b; });
+    return a;
   }
 
-  function ramase() {
-    var set = new Set(stare.folosite);
-    return bazinCurent().filter(function (n) { return !set.has(n); });
+  function extrage(bazin, cate) {          // "cate" numere diferite, sortate
+    return amesteca(bazin).slice(0, Math.min(cate, bazin.length)).sort(asc);
+  }
+
+  // ------------------------------------------------ o grupa noua, echilibrata
+  // Regula: intai numerele iesite cel mai rar, apoi se completeaza aleator din
+  // urmatoarele. Asa, din 25 cu grupe de 6: grupele 1-4 folosesc 24 de numere,
+  // grupa 5 ia numarul ramas + 5 dintre cele deja iesite, si tot asa la infinit.
+  // Nicio grupa nu poate fi identica cu una de dinainte.
+  function grupaNoua(bazin, cate, contari, existente) {
+    for (var t = 0; t < 80; t++) {
+      // amestecare + sortare stabila dupa numarari = aleator in cadrul aceleiasi numarari
+      var ordine = amesteca(bazin).sort(function (a, b) { return contari.get(a) - contari.get(b); });
+      var g = ordine.slice(0, cate).sort(asc);
+      if (!existente.has(g.join(","))) return g;
+    }
+    // Varianta echilibrata e deja folosita (se intampla doar in bazine mici):
+    // alegem, dintre toate grupele nefolosite, una cat mai echilibrata.
+    if (combinari(bazin.length, cate) <= LIMITA_ENUM) {
+      return celMaiEchilibrat(bazin, cate, contari, existente);
+    }
+    for (t = 0; t < 2000; t++) {
+      var r = extrage(bazin, cate);
+      if (!existente.has(r.join(","))) return r;
+    }
+    return null;
+  }
+
+  function celMaiEchilibrat(bazin, cate, contari, existente) {
+    var s = bazin.slice().sort(asc), n = s.length, idx = [], i;
+    var best = Infinity, ales = null, egale = 0;
+    for (i = 0; i < cate; i++) idx.push(i);
+    while (true) {
+      var g = idx.map(function (k) { return s[k]; });
+      if (!existente.has(g.join(","))) {
+        var scor = 0;
+        for (i = 0; i < cate; i++) scor += contari.get(g[i]);
+        if (scor < best) { best = scor; ales = g; egale = 1; }
+        else if (scor === best && intAleator(++egale) === 0) ales = g;   // la egalitate, aleator
+      }
+      var p = cate - 1;                    // urmatoarea combinatie
+      while (p >= 0 && idx[p] === n - cate + p) p--;
+      if (p < 0) break;
+      idx[p]++;
+      for (i = p + 1; i < cate; i++) idx[i] = idx[i - 1] + 1;
+    }
+    return ales;
+  }
+
+  // Face pana la "cate grupe" noi. Intoarce grupele facute (pot fi mai putine
+  // doar daca s-au terminat toate combinatiile posibile).
+  function faGrupe(nr) {
+    var bazin = bazinCurent(), cate = cateEfectiv();
+    var contari = numarari(), existente = cheiExistente(cate);
+    var posibile = combinari(bazin.length, cate), out = [];
+    for (var g = 0; g < nr; g++) {
+      if (existente.size >= posibile) break;
+      var grupa = grupaNoua(bazin, cate, contari, existente);
+      if (!grupa) break;
+      existente.add(grupa.join(","));
+      grupa.forEach(function (n) { contari.set(n, contari.get(n) + 1); });
+      out.push(grupa);
+    }
+    return out;
+  }
+
+  function mesajEpuizat(facute, cerute) {
+    var pos = combinari(marime(), cateEfectiv());
+    spune((facute ? "Am putut extrage doar " + plural(facute, "o variant\u0103", "variante") + " din " + cerute + ". " : "") +
+          (pos === 1 ? "Singura grup\u0103 posibil\u0103 (toate cele " + marime() + " numere) a fost deja generat\u0103."
+                     : "Toate cele " + plural(pos, "", "grupe") + " diferite de c\u00e2te " + cateEfectiv() +
+                       " din " + marime() + " numere au fost deja generate."));
   }
 
   // ------------------------------------------------------ etapa 1: selectia
@@ -532,11 +698,16 @@
     var ceva = stare.selectie || stare.istoric.length;
 
     if (k === total()) {                   // butonul arata "Renunta la selectie"
-      if (!stare.selectie) { salveaza(); deseneaza(); return; }
+      if (!stare.selectie) {
+        salveaza(); deseneaza();
+        spune("\u201eC\u00e2te p\u0103strez\u201d este " + k + ", adic\u0103 toate numerele, deci nu e nimic de exclus. " +
+              "Scade valoarea cu butonul \u2212 (de exemplu la 25), apoi apas\u0103 din nou.");
+        return;
+      }
       intreaba("Renun\u021b la selec\u021bie \u0219i revin la toate numerele 1\u2013" +
                stare.max + ". Grupele de p\u00e2n\u0103 acum se \u0219terg. Continui?",
         function (da) {
-          if (da) { stare.selectie = null; stare.folosite = []; stare.istoric = []; stare.refacere = []; }
+          if (da) { stare.selectie = null; stare.istoric = []; stare.refacere = []; }
           stare.evidentiaza = true;
           salveaza(); deseneaza();
         });
@@ -546,7 +717,7 @@
     function fa() {
       stare.refacere = [];
       stare.selectie = extrage(bazinTotal(), k);
-      stare.folosite = []; stare.istoric = [];
+      stare.istoric = [];
       stare.evidentiaza = true;
       if (stare.cate > k) stare.cate = k;
       if (navigator.vibrate) navigator.vibrate(18);
@@ -569,62 +740,47 @@
   }
 
   // ------------------------------------------------------- etapa 2: grupele
-  function citesteCate() {
-    var cate = parseInt(document.getElementById("cate").value, 10);
-    if (!Number.isInteger(cate) || cate < 1) {
+  function citeste(id) {
+    var v = parseInt(document.getElementById(id).value, 10);
+    if (!Number.isInteger(v) || v < 1) {
       spune("Introdu un num\u0103r \u00eentreg, cel pu\u021bin 1.");
       return null;
     }
-    return cate;
+    return v;
   }
 
-  function mesajGol() {
-    spune(stare.selectie ? "Toate numerele din selec\u021bie au fost extrase"
-                         : "Toate numerele au fost extrase", function () {
-      stare.evidentiaza = false;         // ultimele extrase devin ca celelalte
-      salveaza();
-      deseneaza();
+  function adauga(grupe, lot) {
+    var ora = acum();
+    grupe.forEach(function (g) {
+      var intrare = { ora: ora, numere: g };
+      if (lot != null) intrare.lot = lot;
+      stare.istoric.push(intrare);
     });
+    stare.refacere = [];
+    stare.evidentiaza = true;
+    if (navigator.vibrate) navigator.vibrate(18);
+    salveaza();
+    deseneaza();
   }
 
   function genereaza() {
-    var disp = ramase();
-    if (disp.length === 0) { mesajGol(); return; }
-    var cate = citesteCate();
+    var cate = citeste("cate");
     if (cate === null) return;
-
-    // Daca au mai ramas mai putine decat ai cerut, le extrage pe cele ramase.
-    var noi = extrage(disp, Math.min(cate, disp.length));
-    stare.refacere = [];
-    stare.folosite = stare.folosite.concat(noi);
-    stare.istoric.push({ ora: acum(), numere: noi });
-    stare.evidentiaza = true;
-
-    if (navigator.vibrate) navigator.vibrate(18);
-    salveaza();
-    deseneaza();
+    stare.cate = Math.min(cate, marime());
+    var grupe = faGrupe(1);
+    if (!grupe.length) { deseneaza(); mesajEpuizat(0, 1); return; }
+    adauga(grupe, null);
   }
 
   function genereazaToate() {
-    var disp = ramase();
-    if (disp.length === 0) { mesajGol(); return; }
-    var cate = citesteCate();
-    if (cate === null) return;
-
-    var lot = Date.now(), ora = acum();
-    stare.refacere = [];
-    while (disp.length) {
-      var grupa = extrage(disp, Math.min(cate, disp.length));
-      var scoase = new Set(grupa);
-      disp = disp.filter(function (n) { return !scoase.has(n); });
-      stare.folosite = stare.folosite.concat(grupa);
-      stare.istoric.push({ ora: ora, numere: grupa, lot: lot });
-    }
-    stare.evidentiaza = true;
-
-    if (navigator.vibrate) navigator.vibrate(18);
-    salveaza();
-    deseneaza();
+    var cate = citeste("cate"), nr = citeste("nrGrupe");
+    if (cate === null || nr === null) return;
+    stare.cate = Math.min(cate, marime());
+    stare.grupe = Math.min(nr, MAX_GRUPE);
+    var grupe = faGrupe(stare.grupe);
+    if (grupe.length) adauga(grupe, Date.now());
+    else deseneaza();
+    if (grupe.length < stare.grupe) mesajEpuizat(grupe.length, stare.grupe);
   }
 
   // ----------------------------------------------------------------- setari
@@ -635,12 +791,12 @@
 
     // Bazinul, selectia si istoricul apartin unei anumite marimi. Daca s-a
     // extras deja ceva, schimbarea marimii porneste de la zero.
-    if (stare.selectie || stare.folosite.length || stare.istoric.length) {
+    if (stare.selectie || stare.istoric.length) {
       intreaba("Schimb bazinul la 1\u2013" + nou +
                ". Selec\u021bia \u0219i extragerile de p\u00e2n\u0103 acum se \u0219terg. Continui?",
         function (da) {
           if (!da) { deseneaza(); return; }
-          stare.selectie = null; stare.folosite = []; stare.istoric = [];
+          stare.selectie = null; stare.istoric = [];
           aplicaMax(nou);
         });
       return;
@@ -663,7 +819,7 @@
     if (stare.istoric.length === 0) {
       if (stare.selectie) {                 // primul pas facut a fost selectia
         stare.refacere.push({ tip: "selectie", selectie: stare.selectie });
-        stare.selectie = null; stare.folosite = [];
+        stare.selectie = null;
         stare.evidentiaza = true;
         salveaza(); deseneaza();
         return;
@@ -674,9 +830,6 @@
     var scoase = ultimeleIntrari();
     stare.refacere.push({ tip: "grupe", intrari: scoase });
     stare.istoric.splice(stare.istoric.length - scoase.length, scoase.length);
-    var sters = new Set();
-    scoase.forEach(function (i) { i.numere.forEach(function (n) { sters.add(n); }); });
-    stare.folosite = stare.folosite.filter(function (n) { return !sters.has(n); });
     stare.evidentiaza = true;
     salveaza();
     deseneaza();
@@ -692,9 +845,10 @@
       valid = !stare.selectie && !stare.istoric.length &&
         pas.selectie.every(function (n) { return Number.isInteger(n) && n >= MIN_N && n <= stare.max; });
     } else {
-      var disp = new Set(ramase());
+      var inBazin = new Set(bazinCurent());
+      var chei = new Set(stare.istoric.map(function (i) { return cheieGrupa(i.numere); }));
       valid = pas.intrari.every(function (i) {
-        return i.numere.every(function (n) { return disp.has(n); });
+        return i.numere.every(function (n) { return inBazin.has(n); }) && !chei.has(cheieGrupa(i.numere));
       });
     }
     if (!valid) {
@@ -707,13 +861,9 @@
     stare.refacere.pop();
     if (pas.tip === "selectie") {
       stare.selectie = pas.selectie.slice();
-      stare.folosite = [];
       if (stare.cate > stare.selectie.length) stare.cate = stare.selectie.length;
     } else {
-      pas.intrari.forEach(function (i) {
-        stare.istoric.push(i);
-        stare.folosite = stare.folosite.concat(i.numere);
-      });
+      pas.intrari.forEach(function (i) { stare.istoric.push(i); });
     }
     stare.evidentiaza = true;
     if (navigator.vibrate) navigator.vibrate(18);
@@ -722,8 +872,8 @@
   }
 
   function reset() {
-    // "max", "cate" si "pastreaza" raman; selectia se sterge, ca la pornire
-    stare.selectie = null; stare.folosite = []; stare.istoric = []; stare.refacere = [];
+    // "max", "cate", "grupe" si "pastreaza" raman; selectia se sterge, ca la pornire
+    stare.selectie = null; stare.istoric = []; stare.refacere = [];
     stare.evidentiaza = true;
     salveaza();
     deseneaza();
@@ -753,9 +903,7 @@
   function copiazaTot() {
     // Aceeasi ordine ca in lista Istoric: cea mai recenta extragere prima.
     // Selectia s-a facut inaintea tuturor grupelor, deci sta la final.
-    var linii = stare.istoric.slice().reverse().filter(function (intrare) {
-      return intrare.numere.length;
-    }).map(function (intrare) {
+    var linii = stare.istoric.slice().reverse().map(function (intrare) {
       return intrare.numere.join("  ");
     });
     if (stare.selectie) linii.push(descriereSelectie(Infinity));
@@ -804,8 +952,37 @@
     return b;
   }
 
+  function textNotaGrupe(disp) {
+    var a = disp.length, c = cateEfectiv(), n = marime();
+    var intregi = Math.floor(a / c), rest = a % c, lipsa = c - rest, txt;
+    var completare = lipsa === 1 ? "unul deja extras" : lipsa + " deja extrase";
+
+    if (c === n) {
+      txt = "Fiecare grup\u0103 are toate cele " + n + " numere.";
+    } else if (rest === 0) {
+      txt = "Disponibile: " + a + ", adic\u0103 " +
+            (intregi === 1 ? "o grup\u0103 de " + c : plural(intregi, "", "grupe") + " de c\u00e2te " + c) +
+            ". Apoi se reia cu toate numerele.";
+    } else if (intregi > 0) {
+      txt = "Disponibile: " + a + ", adic\u0103 " +
+            (intregi === 1 ? "o grup\u0103 de " + c : plural(intregi, "", "grupe") + " de c\u00e2te " + c) +
+            ". Grupa a " + (intregi + 1) + "-a ia " +
+            (rest === 1 ? "num\u0103rul r\u0103mas" : "cele " + rest + " r\u0103mase") +
+            " \u0219i completeaz\u0103 cu " + completare + ".";
+    } else {
+      txt = "Disponibile: " + a + ". Grupa urm\u0103toare " +
+            (rest === 1 ? "\u00eel ia" : "le ia") + " \u0219i completeaz\u0103 cu " + completare + ".";
+    }
+
+    var pos = combinari(n, c);
+    if (pos <= 1000) {
+      txt += " Grupe diferite posibile: " + pos + ", r\u0103mase: " + (pos - cheiExistente(c).size) + ".";
+    }
+    return txt;
+  }
+
   function deseneaza() {
-    var disp = ramase(), folosite = new Set(stare.folosite),
+    var disp = ramase(), inDisp = new Set(disp),
         ultimele = stare.evidentiaza ? ultimeleIntrari() : [],
         noi = new Set(), inSel = stare.selectie ? new Set(stare.selectie) : null;
     ultimele.forEach(function (i) { i.numere.forEach(function (n) { noi.add(n); }); });
@@ -814,7 +991,8 @@
     // bilele ar reporni animatia la fiecare redesenare.
     var rez = document.getElementById("rezultat");
     var cheie = !stare.evidentiaza ? "-" :
-      (stare.selectie ? "s" : "") + ultimele.map(function (i) { return i.numere.join(","); }).join("|");
+      (stare.selectie ? "s" : "") + stare.istoric.length + ":" +
+      ultimele.map(function (i) { return i.numere.join(","); }).join("|");
     if (rez.getAttribute("data-afisat") !== cheie) {
       rez.setAttribute("data-afisat", cheie);
       rez.innerHTML = "";
@@ -867,16 +1045,16 @@
       var num = MIN_N + i, el = bazin.children[i];
       el.className = "n" + (inSel && !inSel.has(num) ? " exclus"
                           : noi.has(num) ? " nou"
-                          : folosite.has(num) ? " folosit" : "");
+                          : !inDisp.has(num) ? " folosit" : "");
     }
 
     // subtitlu, contor si progres
     document.getElementById("sub").textContent =
       "1\u2013" + stare.max +
       (stare.selectie ? " \u00b7 selec\u021bie de " + stare.selectie.length : "") +
-      " \u00b7 f\u0103r\u0103 repeti\u021bie";
+      " \u00b7 f\u0103r\u0103 grupe identice";
     document.getElementById("contor").textContent =
-      disp.length + " disponibile \u00b7 " +
+      disp.length + (disp.length === 1 ? " disponibil \u00b7 " : " disponibile \u00b7 ") +
       plural(stare.istoric.length, "o extragere", "extrageri").replace(/^0 de /, "0 ");
     document.getElementById("bara").style.width =
       ((marime() - disp.length) / marime() * 100) + "%";
@@ -884,21 +1062,28 @@
     // limite steppere
     document.getElementById("maxim").value = stare.max;
 
-    // "Cate numere" arata alegerea utilizatorului, nu cate au mai ramas:
-    // altfel valoarea s-ar pierde pe masura ce bazinul se goleste.
+    // "Cate numere" arata alegerea utilizatorului, nu cate au mai ramas.
     var camp = document.getElementById("cate");
     camp.max = marime();
     camp.value = stare.cate;
 
+    var campG = document.getElementById("nrGrupe");
+    campG.max = MAX_GRUPE;
+    campG.value = stare.grupe;
+    document.getElementById("toate").textContent =
+      "Extrage " + plural(stare.grupe, "o variant\u0103", "variante");
+
     var campP = document.getElementById("pastreaza");
     campP.max = total();
-    campP.value = stare.pastreaza;
+    if (document.activeElement !== campP || parseInt(campP.value, 10) !== stare.pastreaza) {
+      campP.value = stare.pastreaza;
+    }
 
     // etapa 1: butonul spune exact ce face
     var btn = document.getElementById("selecteaza"), nota = document.getElementById("notaSel");
     if (stare.pastreaza >= total()) {
       btn.textContent = stare.selectie ? "Renun\u021b\u0103 la selec\u021bie" : "Extrage " + total() + " din " + total();
-      btn.disabled = !stare.selectie;
+      btn.disabled = false;
     } else {
       btn.textContent = (stare.selectie ? "Selec\u021bie nou\u0103: " : "Extrage ") +
                         stare.pastreaza + " din " + total();
@@ -915,18 +1100,7 @@
                          "Scade \u201eC\u00e2te p\u0103strez\u201d ca s\u0103 excluzi numere la \u00eent\u00e2mplare.";
     }
 
-    // etapa 2: cate grupe ies din ce a ramas
-    var notaG = document.getElementById("notaGrupe"), a = disp.length, cg = stare.cate;
-    if (!a) {
-      notaG.textContent = "Nu mai sunt numere disponibile.";
-    } else {
-      var intregi = Math.floor(a / cg), rest = a % cg, parti = [];
-      if (intregi) parti.push(intregi === 1 ? "o grup\u0103 de " + cg
-                                            : plural(intregi, "", "grupe") + " de c\u00e2te " + cg);
-      if (rest) parti.push("o grup\u0103 de " + rest);
-      notaG.textContent = "Disponibile: " + a + ", adic\u0103 " + parti.join(" \u0219i ") + ".";
-    }
-
+    document.getElementById("notaGrupe").textContent = textNotaGrupe(disp);
     document.getElementById("refa").disabled = !stare.refacere.length;
 
     // istoric
@@ -935,16 +1109,14 @@
     if (!stare.istoric.length) {
       ist.innerHTML = '<div class="gol">nicio extragere \u00eenc\u0103</div>';
     } else {
-      stare.istoric.slice().reverse().forEach(function (intrare, i) {
-        var nr = stare.istoric.length - i;
-        var rand = document.createElement("div");
-        rand.className = "rand";
-        rand.innerHTML =
-          '<span class="idx">#' + nr + '</span>' +
-          '<span class="ora">' + intrare.ora + '</span>' +
-          '<span class="nums">' + intrare.numere.join("  ") + '</span>';
-        ist.appendChild(rand);
-      });
+      var html = [];
+      for (var j = stare.istoric.length - 1; j >= 0; j--) {
+        var intrare = stare.istoric[j];
+        html.push('<div class="rand"><span class="idx">#' + (j + 1) + '</span>' +
+                  '<span class="ora">' + intrare.ora + '</span>' +
+                  '<span class="nums">' + intrare.numere.join("  ") + '</span></div>');
+      }
+      ist.innerHTML = html.join("");
     }
   }
 
@@ -958,15 +1130,27 @@
 
   // ------------------------------------------------------------------ pornire
   function pe(id, ev, fn) { document.getElementById(id).addEventListener(ev, fn); }
+  function maxGrupe() { return MAX_GRUPE; }
 
   pe("genereaza", "click", genereaza);
   pe("toate", "click", genereazaToate);
   pe("minus", "click", function () { ajusteaza("cate", "cate", -1, marime); });
   pe("plus", "click", function () { ajusteaza("cate", "cate", 1, marime); });
   pe("cate", "change", function () { ajusteaza("cate", "cate", 0, marime); });
+  pe("minusGrupe", "click", function () { ajusteaza("grupe", "nrGrupe", -1, maxGrupe); });
+  pe("plusGrupe", "click", function () { ajusteaza("grupe", "nrGrupe", 1, maxGrupe); });
+  pe("nrGrupe", "change", function () { ajusteaza("grupe", "nrGrupe", 0, maxGrupe); });
   pe("minusPas", "click", function () { ajusteaza("pastreaza", "pastreaza", -1, total); });
   pe("plusPas", "click", function () { ajusteaza("pastreaza", "pastreaza", 1, total); });
   pe("pastreaza", "change", function () { ajusteaza("pastreaza", "pastreaza", 0, total); });
+  pe("pastreaza", "input", function () {       // butonul arata valoarea noua inca din timpul scrierii
+    var v = parseInt(this.value, 10);
+    if (Number.isInteger(v) && v >= 1 && v <= total() && v !== stare.pastreaza) {
+      stare.pastreaza = v;
+      salveaza();
+      deseneaza();
+    }
+  });
   pe("selecteaza", "click", selecteaza);
   pe("minusMax", "click", function () { schimbaMax(stare.max - 1); });
   pe("plusMax", "click", function () { schimbaMax(stare.max + 1); });
